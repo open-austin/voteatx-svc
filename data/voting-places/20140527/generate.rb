@@ -9,12 +9,13 @@ raise "usage: #{$0} database\n" unless ARGV.length == 1
 dbname = ARGV[0]
 raise "database file \"#{dbname}\" already exists\n" if File.exist?(dbname)
 
-VoteATX::VotingDistrictsLoader.load(
-	:database => dbname,
-       	:table => "voting_districts",
-       	:shp_defs => "../../voting-districts/2012/loader.defs",
-	:log => @log
-)
+shpl = VoteATX::ShapeFileLoader.new(:database => dbname, :log => @log)
+
+shpl.load(:shapefile => "../../voting-districts/2012/VTD2012a.shp",
+  :table => "voting_districts")
+
+#shpl.load(:shapefile => "../../council-districts/2014/foobar.shp",
+#  :table => "council_districts")
 
 loader = VoteATX::VotingPlacesLoader.new(dbname, :log => @log, :debug => false)
 

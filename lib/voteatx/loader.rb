@@ -12,12 +12,59 @@ end
 
 module VoteATX
 
+  class ShapeFileLoader
+
+    SPATIALITE_TOOL = "spatialite_tool"
+    DEFAULT_SRID = "3081"
+    DEFAULT_CODEPAGE = "CP1252"
+
+    def initialize(params = {})
+      @database = params.delete(:database) or raise "required parameter \":database\" not specified"
+      @default_loader = params.delete(:loader) || SPATIALITE_TOOL
+      @default_srid = params.delete(:srid) || DEFAULT_SRID
+      @default_codepage = params.delete(:codepage) || DEFAULT_CODEPAGE
+      @log = params.delete(:log) || Logger.new($stderr)
+      raise "unknown parameters: #{params}" unless params.empty?
+    end
+
+    def load(params = {})
+      shapefile = params.delete(:shapefile) or raise "required parameter \":shapefile\" not specified"
+      table = params.delete(:table) or raise "required parameter \":table\" not specified"
+      loader = params.delete(:loader) || @default_loader
+      srid = params.delete(:srid) || @default_srid
+      codepage = params.delete(:codepage) || @default_codepage
+      raise "unknown parameters: #{params}" unless params.empty?
+
+      @log.info("starting shape file import:")
+      @log.info("  source file: #{shapefile}")
+      @log.info("  target database: #{@database}")
+      @log.info("  target table: #{table}")
+
+      cmd = [
+        loader,
+        "-i",
+        "-shp", shapefile.sub(/\.shp$/i, ''),
+        "-d", @database,
+        "-t", table,
+        "-s", srid,
+        "-c", codepage,
+      ]
+      @log.info("executing: #{cmd.join(' ')}")
+
+      raise "command failed" unless system(*cmd)
+    end
+
+  end
 
   # Load a geospatial "shape" file with voting districts into a Spatialite database.
   #
   # Uses the "spatialite_tool" command to do the loading.
   #
   # Requires a parameters file with YAML definitions for: shapefile, codepage, srid
+  #
+  # THIS IS DEPRECATED!!!!
+  #
+  # This is used by older datasets. Use VoteATX::ShapeFileLoader instead.
   #
   class VotingDistrictsLoader
 
