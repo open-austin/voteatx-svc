@@ -42,7 +42,7 @@ function FindIt(params) {
   /*
    * REST endpoint for the Find It Nearby web service.
    */
-  r.svc_endpoint = params.svc_endpoint || (document.URL.replace(/\/[^\/]*$/, "") + "/svc/search");
+  r.svc_endpoint = params.svc_endpoint || (document.URL.replace(/\/[^\/]*$/, "") + "/search");
 
   /*
    * The google.maps.Map we are building.
@@ -343,9 +343,10 @@ FindIt.methods = {
     req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     req.send(data);
 
-    var nearby_features = eval('(' + req.responseText + ')');
-    console.log("searchNearby: response=", nearby_features);
-    
+    var response = eval('(' + req.responseText + ')');
+    //console.log("searchNearby: response=", nearby_features);
+
+    var nearby_features = response.places;
     if (nearby_features.length == 0) {
       this.send_event("NO_FEATURES");  
       return;
