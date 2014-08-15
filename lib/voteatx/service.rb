@@ -80,11 +80,11 @@ module VoteATX
       redirect to('/index.html')
     end
 
-    get '/svc/search' do
+    get '/search' do
       search(@params)
     end
 
-    post '/svc/search' do
+    post '/search' do
       search(@params)
     end
 
