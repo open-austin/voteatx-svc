@@ -62,7 +62,7 @@ module VoteATX
         result = @@app.search(lat, lng, query_opts)
 
         content_type :json
-        jsonp result.map{|e| e.to_h}
+        jsonp result
       end
 
     end

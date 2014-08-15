@@ -12,10 +12,10 @@ raise "database file \"#{dbname}\" already exists\n" if File.exist?(dbname)
 shpl = VoteATX::ShapeFileLoader.new(:database => dbname, :log => @log)
 
 shpl.load(:shapefile => "../../voting-districts/2012/VTD2012a.shp",
-  :table => "voting_districts")
+  :srid => "3081", :table => "voting_districts")
 
 shpl.load(:shapefile => "../../council-districts/2014/single_member_districts.shp",
-  :table => "council_districts")
+  :srid => "4269", :table => "council_districts")
 
 loader = VoteATX::VotingPlacesLoader.new(dbname, :log => @log, :debug => false)
 
