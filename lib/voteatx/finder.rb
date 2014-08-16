@@ -27,6 +27,11 @@ module VoteATX
   # Default maximum number of early voting places to display.
   MAX_PLACES = 4
 
+  # When performing a search, if a GeoJSON string for a region polygon
+  # exceeds this length then return "true" for the region. The app will
+  # need to make a separate request for that region if it wants the polygon.
+  MAX_REGION_ON_SEARCH = 8192
+
   # Implementation of the VoteATX application.
   #
   # Example usage:
@@ -131,6 +136,14 @@ module VoteATX
       a = VoteATX::Place::Early.search(@db, origin, search_options)
       if a
         response[:places] += a.map {|b| b.to_h}
+      end
+
+
+      response[:districts].keys.each do |district|
+        r = response[:districts][district][:region]
+        if r.to_s.length > MAX_REGION_ON_SEARCH
+          response[:districts][district][:region] = true
+        end
       end
 
       return response
