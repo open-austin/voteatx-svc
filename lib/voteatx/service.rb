@@ -88,6 +88,19 @@ module VoteATX
       search(@params)
     end
 
+    get '/districts/precinct/:id' do
+      district = VoteATX::District::Precinct.get(@@app.db, params["id"])
+      require "pp" ; pp({:district => district})
+      raise Sinatra::NotFound if district.nil?
+      jsonp district.to_h
+    end
+
+    get '/districts/city_council/:id' do
+      district = VoteATX::District::CityCouncil.get(@@app.db, params["id"])
+      raise Sinatra::NotFound if district.nil?
+      jsonp district.to_h
+    end
+
     run! if app_file == $0
 
   end # Service

@@ -5,21 +5,28 @@ module VoteATX
 
     class Base
       attr_reader :id, :region
+
+      def initialize(params)
+        @id = params.delete(:id) or raise "required attribute \":id\" not specified"
+        region = params.delete(:region) or raise "required attribute \":id\" not specified"
+        @region = (region.nil? || region.empty?) ? nil : JSON.parse(region)
+      end
+
       def to_h
         {
           :id => @id,
-          :region => @region.to_h,
+          :region => @region,
         }
       end
+
     end
 
 
-    class VotingPrecinct < Base
+    class Precinct < Base
 
       TABLE = :voting_districts
 
-      def initialize(db, origin)
-
+      def self.find(db, origin)
         geo_column = db.geo_column(TABLE)
         geo_srid = db.geo_srid(TABLE)
 
@@ -29,19 +36,30 @@ module VoteATX
           .filter{ST_Contains(geo_column, ST_Transform(MakePoint(origin.lng, origin.lat, SRID_LATLNG), geo_srid))} \
           .first
 
-        return nil unless row
-
-        @id = row[:id]
-        @region = FindIt::Asset::MapRegion.from_geojson(row[:region])
+        (row.nil? || row.empty?) ? nil : new(row)
       end
-    end # VotingPrecinct
+
+      def self.get(db, id)
+        geo_column = db.geo_column(TABLE)
+        geo_srid = db.geo_srid(TABLE)
+
+        row = db[TABLE] \
+          .select{p_vtd.as(:id)} \
+          .select_append{AsGeoJSON(ST_Transform(geo_column, SRID_LATLNG)).as(:region)} \
+          .filter(:id => id.to_s) \
+          .first
+
+        (row.nil? || row.empty?) ? nil : new(row)
+      end
+
+    end # Precinct
 
 
     class CityCouncil < Base
 
       TABLE = :council_districts
 
-      def initialize(db, origin)
+      def self.find(db, origin)
         geo_column = db.geo_column(TABLE)
         geo_srid = db.geo_srid(TABLE)
 
@@ -51,11 +69,22 @@ module VoteATX
           .filter{ST_Contains(geo_column, ST_Transform(MakePoint(origin.lng, origin.lat, SRID_LATLNG), geo_srid))} \
           .first
 
-        return nil unless row
-
-        @id = row[:id]
-        @region = FindIt::Asset::MapRegion.from_geojson(row[:region])
+        (row.nil? || row.empty?) ? nil : new(row)
       end
+
+      def self.get(db, id)
+        geo_column = db.geo_column(TABLE)
+        geo_srid = db.geo_srid(TABLE)
+
+        row = db[TABLE] \
+          .select{district_1.as(:id)} \
+          .select_append{AsGeoJSON(ST_Transform(geo_column, SRID_LATLNG)).as(:region)} \
+          .filter(:id => id.to_s) \
+          .first
+
+        (row.nil? || row.empty?) ? nil : new(row)
+      end
+
     end # CityCouncil
 
   end

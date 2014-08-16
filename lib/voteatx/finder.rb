@@ -109,12 +109,12 @@ module VoteATX
         }
       }
 
-      precinct = VoteATX::District::VotingPrecinct.new(@db, origin)
+      precinct = VoteATX::District::Precinct.find(@db, origin)
       if precinct
         response[:districts][:precinct] = precinct.to_h
       end
 
-      a = VoteATX::District::CityCouncil.new(@db, origin)
+      a = VoteATX::District::CityCouncil.find(@db, origin)
       if a
         response[:districts][:city_council] = a.to_h
       end
