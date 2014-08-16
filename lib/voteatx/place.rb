@@ -25,6 +25,7 @@ module VoteATX
       #
       def initialize(params)
         p = params.dup
+        @id = p.delete(:id) or raise "required VoteATX::Place attribute \":id\" not specified"
         @type = p.delete(:type) or raise "required VoteATX::Place attribute \":type\" not specified"
         @title = p.delete(:title) or raise "required VoteATX::Place attribute \":title\" not specified"
         @location = p.delete(:location) or raise "required VoteATX::Place attribute \":location\" not specified"
@@ -37,15 +38,18 @@ module VoteATX
 
         @marker = self.class.place_marker(@type, @is_open)
 
+        require "pp" ; pp({:location => @location})
+
       end
 
       def to_h
         h = {
+          :id => @id,
           :type => @type,
           :title => @title,
 	  :location => {
 	    :name => @location[:name],
-	    :address => @location[:address],
+	    :address => @location[:street],
 	    :city => @location[:city],
 	    :state => @location[:state],
 	    :zip => @location[:zip],
@@ -141,8 +145,9 @@ module VoteATX
         raise "cannot find election day voting place for precinct \"#{precinct}\"" unless place
         raise "cannot find election day voting location for precinct \"#{precinct}\"" unless place[:geometry]
 
-        new(:type => :ELECTION_DAY,
-          :title => "Your voting place (precinct #{precinct})",
+        new(:id => place[:id],
+          :type => :ELECTION_DAY,
+          :title => "Voting place for precinct #{precinct}",
 	  :location => place,
           :is_open => (now >= place[:opens] && now < place[:closes]),
           :info => format_info(place))
@@ -198,7 +203,8 @@ module VoteATX
           .filter{closes > now}
 	is_open = (rs.count > 0)
 
-        ret << new(:type => :EARLY_VOTING_FIXED,
+        ret << new(:id => early_place[:id],
+          :type => :EARLY_VOTING_FIXED,
           :title => "Early voting location",
 	  :location => early_place,
           :is_open => is_open,
@@ -214,7 +220,8 @@ module VoteATX
 
         mobile_places.each do |place|
 	  is_open = (now >= place[:opens])
-          ret << new(:type => :EARLY_VOTING_MOBILE,
+          ret << new(:id => place[:id],
+            :type => :EARLY_VOTING_MOBILE,
             :title => "Mobile early voting location",
 	    :location => place,
             :is_open => is_open,
