@@ -90,7 +90,6 @@ module VoteATX
 
     get '/districts/precinct/:id' do
       district = VoteATX::District::Precinct.get(@@app.db, params["id"])
-      require "pp" ; pp({:district => district})
       raise Sinatra::NotFound if district.nil?
       jsonp district.to_h
     end
