@@ -1,14 +1,13 @@
-= VoteATX
+= VoteATX Service
 
-VoteATX is a web application that locates best places to vote.
+VoteATX is a voting place finder application for Travis County elections.
 
-It was designed for Travis County elections.
+It is provided in two projects:
 
-You can view the application running at: http://voteatx.us/
+* voteatx-app -- The front-end application. https://github.com/open-austin/voteatx-app
+* voteatx-svc -- The back-end web service (this project). https://github.com/open-austin/voteatx-svc
 
-The source code is published at: https://github.com/chip-rosenthal/voteatx
-
-This package has been tested with Ruby vesions 1.9.3 and 2.0. It requires
+This program has been tested with Ruby vesions 1.9.3 and 2.0. It requires
 Sqlite3 database with Spatialite extensions.
 
 *Important:* For more information on setting up Spatialite on your system,
@@ -43,27 +42,20 @@ a command such as:
 
 Then, browse http://localhost:4567 to see the running application.
 
-The application has been deployed using Phusion Passenger (mod_rails) under Apache.
-The "config.ru" file is used in production.
+The application has been deployed using Phusion Passenger (mod_rails)
+under Apache.  The "config.ru" file is used in production.
 
+== Documentation
 
-== Porting and Update
-
-The application is designed to be portable. The process to deploy at a new location -- or
-update for a new election date -- should be:
-
-* Generate a new database.
-* Update the "public/about.html" page.
-
-The README-data.rdoc file provides additional information on setting up the database.
-
-Additional documentation can be produced by running: rake rdoc
+* README-API.md describes the web services API
+* README-data.rdoc provides information on setting up the database.
+* Additional documentation can be produced by running: rake rdoc
 
 
 == Feedback
 
 Please report any problems or feedback through the issue tracker for this
-project: https://github.com/chip-rosenthal/voteatx/issues
+project: https://github.com/open-austrin/voteatx/issues
 
----
-Chip Rosenthal <chip@unicom.com>
+This program was written by Chip Rosenthal <chip@unicom.com>.
+
