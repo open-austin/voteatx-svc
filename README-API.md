@@ -1,10 +1,12 @@
 # VoteATX Service API
 
-## Response Entities
+## Entities
+
+This section describes the entities used by the VoteATX API.
 
 ### Location
 
-A location, with name and address.
+A location, with name, address, and map coordinates.
 
 * name -- Location name, such as "Fiesta Mart Central".
 * address -- Location street address, such as "3909 North IH 35".
@@ -33,7 +35,7 @@ A voting place.
 * id -- Unique identifier for the place.
 * title -- Title for the place, such as "Voting place for precinct 275"
     or "Early voting location".
-* info -- An HTML string, that can be presented to the user, such as in
+* info -- An HTML string that can be presented to the user, such as in
     a map info window.
 * is_open -- Indicates whether this place is open at the time of the
     query. Boolean "true" or "false" value.
@@ -56,13 +58,13 @@ Example:
           "latitude" : 30.29642,
           "longitude" : -97.71764
        },
-       "info" : "<b>Early Voting Location</b> ... <DELETED> ...",
+       "info" : "<b>Early Voting Location</b> ...",
        "is_open" : false,
     }
 
 ### Region
 
-A map region, expressed as a list of vertices.
+A GeoJSON _Geometry_ entity. See: https://en.wikipedia.org/wiki/GeoJSON
 
 * type -- The region type type, typically "Polygon".
 * coordinates -- An array of [longitude,latitude] coordinates.
@@ -71,7 +73,9 @@ Example:
 
     {
        "type" : "Polygon",
-       "coordinates" : [[[-97.727049999582,30.3030389998156], ...<DELETED> ... [-97.727049999582,30.3030389998156]]]
+       "coordinates" : [
+          [-97.727049999582,30.3030389998156], ..., [-97.727049999582,30.3030389998156]
+       ]
     }
     
     
@@ -82,14 +86,15 @@ A district or some regional area.
 * id -- Unique identifier for this district.
 * region -- A _Region_ entity, describing the map region.
 
-
 Example:
 
     {
        "id" : "275",
        "region" : {
           "type" : "Polygon",
-          "coordinates" : [[[-97.727049999582,30.3030389998156], ...<DELETED> ... [-97.727049999582,30.3030389998156]]]
+          "coordinates" : [
+             [-97.727049999582,30.3030389998156], ..., [-97.727049999582,30.3030389998156]
+          ]
        }
     }
     
@@ -115,38 +120,39 @@ Example:
 
 Searches for best voting places near a given location.
 
-#### Request Parameters
+#### Request Query Arguments
 
 * latitude [required] -- Latitude of the search location, in degrees.
 
 * longitude [required] -- Longitude of the search location, in degrees.
 
-* time [options] -- Search locates best voting places for the given time.
+* time [optional] -- Search locates best voting places for the given time.
 Default is now. Time is specified in a format understood by the Ruby
 Time#parse function. This primarily is used for testing.
 
-* max_distance [options] -- Consider only voting places within this distance
+* max_distance [optional] -- Consider only voting places within this distance
 (in miles) of the given location. Default is 12 miles.
 
-* max_locations [options] -- Maximum number of early voting locations
+* max_locations [optional] -- Maximum number of early voting locations
 returned in the results. Default is 4.
 
 #### Response
 
 The response entity contains attributes:
 
-* districts -- A keyed list of _District_ entitities. The keys are
-    district type, such as "precinct" or "city_council".
 * places -- An array of _Place_ entities, indicating the best voting
     places for this location.
+* districts -- A keyed list of _District_ entitities. The keys are
+    district type. Supported district types are "precinct" and "city_council".
 * message -- An optional _Message_ entity.
 
-To make applications more performant, extremely large polygons are
-removed from the _District_ entities. In this case, the "region" value
-will be true, instead of a _Region_ entity that contains a polygon. If
-the polygon is needed, a seperate query for that region will be required.
-For an example of this, see the "districts.city_council.region" parameter
-in the example below.
+*NOTE:* The council district polygon can be very large. (We mean large in
+number of points, not spatial area.) On a slow connection, this could cause
+the initial load to appear very slow. To avoid this problem, when a region
+has a large polygon, the _region_ attribute will be changed from a _Region_
+entity to the boolean "true". If an application needs the region, it will
+have to make a subsequent request to obtain the geometry. For an example of
+this, see the "districts.city_council.region" parameter in the example below.
 
 
 #### Example
@@ -183,7 +189,7 @@ in the example below.
                 "longitude" : -97.71764
              },
              "type" : "EARLY_VOTING_FIXED",
-             "info" : "<b>Early Voting Location</b> ... <DELETED> ...",
+             "info" : "<b>Early Voting Location</b> ...",
              "is_open" : false,
              "title" : "Early voting location"
           }
@@ -197,15 +203,20 @@ in the example below.
              "id" : "275",
              "region" : {
                 "type" : "Polygon",
-                "coordinates" : [[[-97.727049999582,30.3030389998156], ...<DELETED> ... [-97.727049999582,30.3030389998156]]]
+                "coordinates" : [[-97.727049999582,30.3030389998156], ... [-97.727049999582,30.3030389998156]]
              }
           }
        },
        "message" : {
           "severity" : "WARNING",
-          "content" : "<p>This app is displaying voting place information for the May 2014 election.</p>\n            <p>We will update this app once voting place information for the Nov 4, 2014 election is released.</p>"
+          "content" : "<p>Beware of low flying armadillos.</p>"
        }
     }
+
+
+### POST /search
+
+Same as: _GET /search_
 
 
 ### GET /districts/:type/:id
@@ -229,11 +240,27 @@ The response is a _District_ entity.
        "id" : "275",
        "region" : {
           "type" : "Polygon",
-          "coordinates" : [[[-97.727049999582,30.3030389998156], ...<DELETED> ... [-97.727049999582,30.3030389998156]]]
+          "coordinates" : [
+             [-97.727049999582,30.3030389998156], ... [-97.727049999582,30.3030389998156]
+          ]
        }
     }
 
+
 ### GET /places/:id
 
-Not implemented yet.
+*Not implemented yet.*
 
+Retrieves a specified place.
+
+### Request Parameters
+
+* :id -- The place identifier
+
+### Response
+
+The response is a _Place_ entity.
+
+### Example
+
+_TO DO_
