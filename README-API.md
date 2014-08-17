@@ -104,13 +104,13 @@ A message to be displayed to the user.
 
 * severity -- Message severity. Possible values are: "ERROR", "WARNING",
     "INFO".
-* content -- Message content in HTML.
+* content -- Message content, plain text.
 
 Example:
 
     {
        "severity" : "WARNING",
-       "content" : "<p>Beware of low flying armadillos.</p>"
+       "content" : "Beware of low flying armadillos."
     }
 
 ## Requests
@@ -209,7 +209,7 @@ this, see the "districts.city_council.region" parameter in the example below.
        },
        "message" : {
           "severity" : "WARNING",
-          "content" : "<p>Beware of low flying armadillos.</p>"
+          "content" : "Beware of low flying armadillos."
        }
     }
 

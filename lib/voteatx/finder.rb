@@ -109,8 +109,7 @@ module VoteATX
         :places => [],
         :message => {
           :severity => :WARNING,
-          :content => "<p>This app is displaying voting place information for the May 2014 election.</p>
-            <p>We will update this app once voting place information for the Nov 4, 2014 election is released.</p>"
+          :content => "This app is displaying voting place information for the May 2014 election.  We will update this app once voting place information for the Nov 4, 2014 election is released."
         }
       }
 
