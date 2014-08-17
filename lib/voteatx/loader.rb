@@ -319,6 +319,13 @@ module VoteATX
     #
     def add_row_methods(row)
 
+      # Ruby 1.9 does not implement CSV::Row#has_key?
+      unless row.methods.include?(:'has_key?')
+        def row.has_key?(col)
+          ! self.field(col).nil?
+        end
+      end
+
       init_col_id_to_idx_table(row)
 
       class << row

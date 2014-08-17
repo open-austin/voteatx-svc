@@ -61,7 +61,7 @@ loader.election_description = "for the May 27, 2014 primary run-off election in 
 
 loader.election_info = %q{<b>Note:</b> Voting centers are in effect for this election.  That means on election day you can vote at <em>any</em> open Travis County polling place, not just your home precinct.
 
-<i>(<a href="http://www.traviscountyclerk.org/eclerk/Content.do?code=E.4">more information ...</a>)</i>}
+<i>(<a href="http://www.traviscountyclerk.org/eclerk/Content.do?code=E.4" target="_blank">more information ...</a>)</i>}
 
 
 #####
