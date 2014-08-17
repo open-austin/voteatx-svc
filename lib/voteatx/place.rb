@@ -10,7 +10,7 @@ module VoteATX
     #
     class Base
 
-      attr_reader :origin, :type, :title, :location, :is_open, :marker, :info
+      attr_reader :origin, :type, :title, :location, :is_open, :info
 
       # Create a new voting place instance.
       #
@@ -36,10 +36,6 @@ module VoteATX
 
         raise "bad voting place type \"#{@type}\"" unless [:ELECTION_DAY, :EARLY_VOTING_FIXED, :EARLY_VOTING_MOBILE].include?(@type)
 
-        @marker = self.class.place_marker(@type, @is_open)
-
-        require "pp" ; pp({:location => @location})
-
       end
 
       def to_h
@@ -56,10 +52,6 @@ module VoteATX
 	    :latitude => @location[:latitude],
 	    :longitude => @location[:longitude],
 	  },
-          :marker => {
-	    :icon => @marker.marker.to_h,
-            :shadow => @marker.shadow.to_h,
-	  },
           :is_open => @is_open,
           :info => @info,
         }
@@ -70,14 +62,6 @@ module VoteATX
 	:EARLY_VOTING_FIXED => "_early",
 	:EARLY_VOTING_MOBILE => "_mobile",
       }.freeze
-
-      # Generate a FindIt::Asset::MapMarker for given voting place type.
-      def self.place_marker(type, is_open)
-        p = ELECTION_TYPE_MARKER_SUFFIX[type] or raise "unknown voting place type \"#{type}\""
-        oc = (is_open ? "" : "_closed")
-        graphic = "/mapicons/icon_vote#{p}#{oc}.png"
-        FindIt::Asset::MapMarker.new(graphic, :shadow => "icon_vote_shadow.png")
-      end
 
 
       # Generate content for an info window from database record for a voting place.
@@ -128,7 +112,6 @@ module VoteATX
       def self.search(db, origin, options = {})
 	raise "must override the search method in the derived class"
       end
-
 
     end
 
