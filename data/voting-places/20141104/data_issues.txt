@@ -1,0 +1,76 @@
+== DATA ERRORS ===
+
+* Progress is blocked until items marked [BLOCK] are resolved.
+* Items marked [patched] have been manually corrected.
+
+
+--- 20141104_G14_Webload_FINAL_EDay ---
+
+* longitude and latitude columns are reversed [patched]
+* precinct 121 is duplicated [BLOCK]
+* precinct 152 is duplicated [BLOCK]
+* precinct 323 is duplicated [BLOCK]
+* precinct 351 is duplicated [BLOCK]
+* precinct 424 is duplicated [BLOCK]
+* precinct 426 is duplicated [BLOCK]
+* precinct 441 is duplicated [BLOCK]
+
+
+--- 20141104_G14_Webload_FINAL_EVPerm ---
+
+* longitude and latitude columns are reversed [patched]
+* need hours for fixed early voting locations [BLOCK]
+
+
+--- 20141104_G14_Webload_FINAL_Mobile ---
+
+* longitude and latitude columns are reversed [patched]
+
+
+== DATA QUALITY ===
+
+These items have not been adjusted. In final data load, inconsistent data
+will be resolved in favor of values in the election day locations dataset.
+
+
+--- 20141104_G14_Webload_FINAL_EVPerm ---
+
+* "name" value inconsistent with value in "locations" table
+  stored name = "Highland Mall"
+  new name    = "Highland Mall, Suite #1020"
+
+* "street" value inconsistent with value in "locations" table
+  location name = "Fiesta Mart Central"
+  stored street = "3909 North IH 35"
+  new street    = "3909 North IH-35"
+
+* "zip" value inconsistent with value in "locations" table
+  location name = "University of Texas, Flawn Academic Center"
+  stored zip = "78713"
+  new zip    = "78712"
+
+* "name" value inconsistent with value in "locations" table
+  stored name = "Randalls Research and Braker"
+  new name    = "Randalls Research"
+
+* "name" value inconsistent with value in "locations" table
+  stored name = "Randalls South Mopac and William Cannon"
+  new name    = "Randalls South Mopac"
+
+* "name" value inconsistent with value in "locations" table
+  stored name = "Del Valle ISD Admin Bldg."
+  new name    = "Del Valle ISD Administration Building"
+
+* "street" value inconsistent with value in "locations" table
+  location name = "Del Valle ISD Admin Bldg."
+  stored street = "5301 Ross Rd."
+  new street    = "5301 Ross Road"
+
+
+--- 20141104_G14_Webload_FINAL_Mobile ---
+
+* "street" value inconsistent with value in "locations" table
+  location name = "ACC Rio Grande Campus"
+  stored street = "1212 Rio Grande Street"
+  new street    = "1212 Rio Grande St."
+
