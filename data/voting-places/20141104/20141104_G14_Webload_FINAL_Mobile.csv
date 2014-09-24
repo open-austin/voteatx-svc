@@ -1,7 +1,7 @@
 Name,Address,City,Date,Zipcode,Start Time,End Time,Longitude,Latitude,Area of the City,Type,Hours,Election Code
 ACC Eastview Campus,3401 Webberville Road ,Austin,10/20/2014,78702,8:00,19:00,-97.70696,30.26834,E,EM,V,G14
 ACC Northridge Campus,11928 Stonehollow Drive ,Austin,10/20/2014,78758,8:00,18:00,-97.70448,30.40319,N,EM,V,G14
-ACC Rio Grande Campus,1212 Rio Grande Street ,Austin,10/20/2014,78701,8:00,19:00,-97.7471,30.27648,C,EM,V,G14
+ACC Rio Grande Campus,1212 Rio Grande St.,Austin,10/20/2014,78701,8:00,19:00,-97.7471,30.27648,C,EM,V,G14
 ACC South Austin Campus,1820 West Stassney Lane  ,Austin,10/20/2014,78745,8:00,19:00,-97.795959,30.21565,S,EM,V,G14
 LBJ Building,111 East 17th Street ,Austin,10/20/2014,78701,8:00,17:00,-97.737615,30.278674,C,EM,V,G14
 Lago Vista City Hall,5803 Thunderbird Street ,Lago Vista,10/20/2014,78645,8:00,17:00,-97.987372,30.453007,NW,EM,V,G14

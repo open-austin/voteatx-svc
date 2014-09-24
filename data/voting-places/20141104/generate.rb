@@ -97,11 +97,11 @@ EARLY_VOTING_FIXED_HOURS = {
     # *** FIXME ***
   ],
 
-  'V|Del Valle ISD Admin Bldg.' => [
+  'V|Del Valle ISD Administration Building' => [
     # *** FIXME ***
   ],
 
-  'V|Highland Mall' => [
+  'V|Highland Mall, Suite #1020' => [
     # *** FIXME ***
   ],
 
