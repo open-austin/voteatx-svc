@@ -71,8 +71,7 @@ loader.election_info = %q{<b>Note:</b> Voting centers are in effect for this ele
 # Define this as a range:  Time .. Time
 #
 
-# Nov 11, 2014 7am-7pm
-# *** FIXME *** - need to verify these times are correct
+# Nov 4, 2014, 7am-7pm
 ELECTION_DAY_HOURS = Time.new(2014, 11, 4, 7, 0) .. Time.new(2014, 11, 4, 19, 0)
 
 
@@ -89,20 +88,71 @@ ELECTION_DAY_HOURS = Time.new(2014, 11, 4, 7, 0) .. Time.new(2014, 11, 4, 19, 0)
 # EARLY VOTING LOCATIONS
 EARLY_VOTING_FIXED_HOURS = {
 
+  # October 20 – October 31: Monday – Saturday 7 am – 7 pm and Sunday Noon - 6 pm
   'R' => [
-    # *** FIXME ***
+    Time.new(2014, 10, 20,  7,  0) .. Time.new(2014, 10, 20, 19,  0), # Mo
+    Time.new(2014, 10, 21,  7,  0) .. Time.new(2014, 10, 21, 19,  0), # Tu
+    Time.new(2014, 10, 22,  7,  0) .. Time.new(2014, 10, 22, 19,  0), # We
+    Time.new(2014, 10, 23,  7,  0) .. Time.new(2014, 10, 23, 19,  0), # Th
+    Time.new(2014, 10, 24,  7,  0) .. Time.new(2014, 10, 24, 19,  0), # Fr
+    Time.new(2014, 10, 25,  7,  0) .. Time.new(2014, 10, 25, 19,  0), # Sa
+    Time.new(2014, 10, 26, 12,  0) .. Time.new(2014, 10, 26, 18,  0), # Su (12:00 - 6:00)
+    Time.new(2014, 10, 27,  7,  0) .. Time.new(2014, 10, 27, 19,  0), # Mo
+    Time.new(2014, 10, 28,  7,  0) .. Time.new(2014, 10, 28, 19,  0), # Tu
+    Time.new(2014, 10, 29,  7,  0) .. Time.new(2014, 10, 29, 19,  0), # We
+    Time.new(2014, 10, 30,  7,  0) .. Time.new(2014, 10, 30, 19,  0), # Th
+    Time.new(2014, 10, 31,  7,  0) .. Time.new(2014, 10, 31, 19,  0), # Fr
   ],
 
+  # Mon.-Thur. 10 am - 5:30 pm, Fri. 10 am - 4:30 pm, Sat. 10 am - 3:30 pm, Sun. Closed
   'V|Carver Museum' => [
-    # *** FIXME ***
+    Time.new(2014, 10, 20, 10,  0) .. Time.new(2014, 10, 20, 17, 30), # Mo
+    Time.new(2014, 10, 21, 10,  0) .. Time.new(2014, 10, 21, 17, 30), # Tu
+    Time.new(2014, 10, 22, 10,  0) .. Time.new(2014, 10, 22, 17, 30), # We
+    Time.new(2014, 10, 23, 10,  0) .. Time.new(2014, 10, 23, 17, 30), # Th
+    Time.new(2014, 10, 24, 10,  0) .. Time.new(2014, 10, 24, 16, 30), # Fr (10:00 - 4:30)
+    Time.new(2014, 10, 25, 10,  0) .. Time.new(2014, 10, 25, 15, 30), # Sa (10:00 - 3:30)
+    Time.new(2014, 10, 26,  0,  0) .. Time.new(2014, 10, 26,  0,  0), # Su (closed)
+    Time.new(2014, 10, 27, 10,  0) .. Time.new(2014, 10, 27, 17, 30), # Mo
+    Time.new(2014, 10, 28, 10,  0) .. Time.new(2014, 10, 28, 17, 30), # Tu
+    Time.new(2014, 10, 29, 10,  0) .. Time.new(2014, 10, 29, 17, 30), # We
+    Time.new(2014, 10, 30, 10,  0) .. Time.new(2014, 10, 30, 17, 30), # Th
+    Time.new(2014, 10, 31, 10,  0) .. Time.new(2014, 10, 31, 16, 30), # Fr (10:00 - 4:30)
   ],
 
+  # October 20 – October 30: Monday – Saturday 7 am – 7 pm and Sunday Noon - 6 pm
+  # Friday, Oct. 31st: closed
+  #
   'V|Del Valle ISD Administration Building' => [
-    # *** FIXME ***
+    Time.new(2014, 10, 20,  7,  0) .. Time.new(2014, 10, 20, 19,  0), # Mo
+    Time.new(2014, 10, 21,  7,  0) .. Time.new(2014, 10, 21, 19,  0), # Tu
+    Time.new(2014, 10, 22,  7,  0) .. Time.new(2014, 10, 22, 19,  0), # We
+    Time.new(2014, 10, 23,  7,  0) .. Time.new(2014, 10, 23, 19,  0), # Th
+    Time.new(2014, 10, 24,  7,  0) .. Time.new(2014, 10, 24, 19,  0), # Fr
+    Time.new(2014, 10, 25,  7,  0) .. Time.new(2014, 10, 25, 19,  0), # Sa
+    Time.new(2014, 10, 26, 12,  0) .. Time.new(2014, 10, 26, 18,  0), # Su (12:00 - 6:00)
+    Time.new(2014, 10, 27,  7,  0) .. Time.new(2014, 10, 27, 19,  0), # Mo
+    Time.new(2014, 10, 28,  7,  0) .. Time.new(2014, 10, 28, 19,  0), # Tu
+    Time.new(2014, 10, 29,  7,  0) .. Time.new(2014, 10, 29, 19,  0), # We
+    Time.new(2014, 10, 30,  7,  0) .. Time.new(2014, 10, 30, 19,  0), # Th
+    Time.new(2014, 10, 31,  0,  0) .. Time.new(2014, 10, 31,  0,  0), # Fr (closed)
   ],
 
+  # October 20 – October 30: Monday – Saturday 7 am – 7 pm and Sunday Noon – 6 pm
+  # October 31: Friday 7 am – 9 pm
   'V|Highland Mall, Suite #1020' => [
-    # *** FIXME ***
+    Time.new(2014, 10, 20,  7,  0) .. Time.new(2014, 10, 20, 19,  0), # Mo
+    Time.new(2014, 10, 21,  7,  0) .. Time.new(2014, 10, 21, 19,  0), # Tu
+    Time.new(2014, 10, 22,  7,  0) .. Time.new(2014, 10, 22, 19,  0), # We
+    Time.new(2014, 10, 23,  7,  0) .. Time.new(2014, 10, 23, 19,  0), # Th
+    Time.new(2014, 10, 24,  7,  0) .. Time.new(2014, 10, 24, 19,  0), # Fr
+    Time.new(2014, 10, 25,  7,  0) .. Time.new(2014, 10, 25, 19,  0), # Sa
+    Time.new(2014, 10, 26, 12,  0) .. Time.new(2014, 10, 26, 18,  0), # Su (12:00 - 6:00)
+    Time.new(2014, 10, 27,  7,  0) .. Time.new(2014, 10, 27, 19,  0), # Mo
+    Time.new(2014, 10, 28,  7,  0) .. Time.new(2014, 10, 28, 19,  0), # Tu
+    Time.new(2014, 10, 29,  7,  0) .. Time.new(2014, 10, 29, 19,  0), # We
+    Time.new(2014, 10, 30,  7,  0) .. Time.new(2014, 10, 30, 19,  0), # Th
+    Time.new(2014, 10, 31,  7,  0) .. Time.new(2014, 10, 31, 21,  0), # Fr (7:00 - 9:00)
   ],
 
 }
