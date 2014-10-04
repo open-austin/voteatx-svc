@@ -107,15 +107,20 @@ module VoteATX
       response = {
         :districts => {},
         :places => [],
-        :message => {
-          :severity => :WARNING,
-          :content => "This app is displaying voting place information for the May 2014 election.  We will update this app once voting place information for the Nov 4, 2014 election is released."
-        }
+#        :message => {
+#          :severity => :WARNING,
+#          :content => "This app is displaying voting place information for the May 2014 election.  We will update this app once voting place information for the Nov 4, 2014 election is released."
+#        }
       }
 
       precinct = VoteATX::District::Precinct.find(@db, origin)
       if precinct
         response[:districts][:precinct] = precinct.to_h
+      else
+        response[:message] => {
+          :severity => :WARNING,
+          :content => "The location you have selected is outside the Travis County voting area.",
+        }
       end
 
       a = VoteATX::District::CityCouncil.find(@db, origin)
@@ -136,7 +141,6 @@ module VoteATX
       if a
         response[:places] += a.map {|b| b.to_h}
       end
-
 
       response[:districts].keys.each do |district|
         r = response[:districts][district][:region]
