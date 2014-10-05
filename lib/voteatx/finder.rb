@@ -117,7 +117,7 @@ module VoteATX
       if precinct
         response[:districts][:precinct] = precinct.to_h
       else
-        response[:message] => {
+        response[:message] = {
           :severity => :WARNING,
           :content => "The location you have selected is outside the Travis County voting area.",
         }
