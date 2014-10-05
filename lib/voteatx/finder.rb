@@ -7,6 +7,9 @@ class String
   def escape_html
     CGI.escape_html(self)
   end
+  def escape_uri
+    URI.escape(self)
+  end
 end
 
 class NilClass
