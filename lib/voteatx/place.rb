@@ -63,12 +63,6 @@ module VoteATX
 	:EARLY_VOTING_MOBILE => "_mobile",
       }.freeze
 
-      NAVIGATE_ICON = %q{
-<svg width="453" xmlns="http://www.w3.org/2000/svg" height="471" viewBox="0 0 453 471" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 453 471">
-<path d="M308,471l-72-217H0L453,0L308,471z"/>
-</svg>
-}
-
       # Generate content for an info window from database record for a voting place.
       def self.format_info(place)
 	info = []
@@ -77,9 +71,11 @@ module VoteATX
           info << "<i>" + @election_description.escape_html + "</i>"
           info << ""
         end
-        ###s = "<a href=\"http://maps.google.com/?q=#{place[:location_formatted].escape_uri}\" target=\"_blank\">#{NAVIGATE_ICON}</a>"
-	###info << s + " " + place[:location_formatted].escape_html
-	info << place[:location_formatted].escape_html
+
+        a = "#{place[:name]}, #{place[:street]}, #{place[:city]}, #{place[:state]} #{place[:zip]}"
+        info << "<a href=\"http://maps.google.com/?daddr=#{a.escape_uri}\" target=\"_blank\">#{place[:name].escape_html}</a>"
+        info << place[:street].escape_html
+        info << "#{place[:city]}, #{place[:state]} #{place[:zip]}".escape_html
 	info << ""
 	info << "Hours of operation:"
 	info += place[:schedule_formatted].escape_html.split("\n").map {|s| "\u2022 " + s}
