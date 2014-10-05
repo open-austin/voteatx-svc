@@ -27,9 +27,6 @@ module VoteATX
       set :root, ENV['APP_ROOT'] || VoteATX::BASEDIR
       log.info "root=#{settings.root}"
 
-      set :public_folder, "#{settings.root}/public"
-      log.info "public_folder=#{settings.public_folder}"
-
       database = ENV['APP_DATABASE'] || "#{settings.root}/voteatx.db"
       log.info "database=#{database}"
       @@app = VoteATX::Finder.new(:database => database, :log => log)
@@ -73,11 +70,6 @@ module VoteATX
       env = request.env
       @params.merge!(env['rack.request.form_hash']) unless env['rack.request.form_hash'].empty?
       @params.merge!(env['rack.request.query_hash']) unless env['rack.request.query_hash'].empty?
-    end
-
-       
-    get '/' do
-      redirect to('/index.html')
     end
 
     get '/search' do
