@@ -218,8 +218,6 @@ module VoteATX
 
 	mobile_places = rs.limit(max_places - 1).all
 
-        require "pp" ; pp({:rs => rs, :mobile_places => mobile_places})
-
         mobile_places.each do |place|
           next if did_place[place[:place_id]]
           did_place[place[:place_id]] = true
