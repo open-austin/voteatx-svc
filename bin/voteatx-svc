@@ -4,5 +4,5 @@ if [ -z "$APP_ROOT" ] ; then
 	APP_ROOT=`cd $APP_ROOT && pwd`
 fi
 export APP_ROOT
-exec ruby $APP_ROOT/lib/voteatx/service.rb 
+exec ${RUBY:-ruby} $APP_ROOT/lib/voteatx/service.rb 
 
