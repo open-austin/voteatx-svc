@@ -2,6 +2,7 @@
 
 HOME="/home/ubuntu"
 APP_ROOT="$HOME/voteatx-svc"
+APP_USER="ubuntu:ubuntu"
 SVC="voteatx-svc"
 
 USAGE="usage: $0 {start|stop|restart|status|start}"
@@ -25,9 +26,10 @@ do_start() {
 	daemon -v \
 		--env="APP_ROOT=$APP_ROOT" \
 		--env="RACK_ENV=production" \
-		--env="PATH=$PATH" \
 		--env="HOME=$HOME" \
+		--env="PATH=$PATH" \
 		--chdir="$APP_ROOT" \
+                --user="$APP_USER" \
 		--pidfile="$APP_ROOT/log/$SVC.pid" \
 		--output="$APP_ROOT/log/$SVC.run" \
 		--name="$SVC" \
