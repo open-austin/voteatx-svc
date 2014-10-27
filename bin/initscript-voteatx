@@ -1,0 +1,65 @@
+#!/bin/sh
+
+HOME="/home/ubuntu"
+APP_ROOT="$HOME/voteatx-svc"
+SVC="voteatx-svc"
+
+USAGE="usage: $0 {start|stop|restart|status|start}"
+
+die() {
+	echo "$@" >&2
+	exit 1
+}
+
+do_start() {
+	do_status >/dev/null 2>&1
+	if [ $? -eq 0 ] ; then
+		die "$0: Service $SVC already running"
+	fi
+	 daemon \
+		--pidfile="$APP_ROOT/log/$SVC.pid" \
+		--name="$SVC" \
+ 		--running
+
+	echo "Starting $SVC ... \c"
+	daemon -v \
+		--env="APP_ROOT=$APP_ROOT" \
+		--env="RACK_ENV=production" \
+		--env="PATH=$PATH" \
+		--env="HOME=$HOME" \
+		--chdir="$APP_ROOT" \
+		--pidfile="$APP_ROOT/log/$SVC.pid" \
+		--output="$APP_ROOT/log/$SVC.run" \
+		--name="$SVC" \
+		bundle exec $APP_ROOT/bin/voteatx-svc 
+	echo "OK"
+}
+
+do_stop() {
+	echo "Stoping $SVC ... \c"
+	daemon -v \
+		--pidfile="$APP_ROOT/log/$SVC.pid" \
+		--name="$SVC" \
+ 		--stop
+	echo "OK"
+}
+
+do_status() {
+	 daemon -v \
+		--pidfile="$APP_ROOT/log/$SVC.pid" \
+		--name="$SVC" \
+ 		--running
+}
+
+if [ $# -ne 1 ] ; then
+	die "$USAGE"
+fi
+
+case "$1" in
+	start)	do_start ;;
+	stop)	do_stop ;;
+	restart) do_stop ; do_start ;;
+	status)	do_status ;;
+	*)	die "$USAGE" ;; 
+esac
+
