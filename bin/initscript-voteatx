@@ -60,7 +60,7 @@ fi
 case "$1" in
 	start)	do_start ;;
 	stop)	do_stop ;;
-	restart) do_stop ; do_start ;;
+	restart) do_stop ; sleep 2; do_start ;;
 	status)	do_status ;;
 	*)	die "$USAGE" ;; 
 esac
