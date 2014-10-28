@@ -1,9 +1,23 @@
 #!/bin/sh
+### BEGIN INIT INFO
+# Provides:          voteatx-svc
+# Required-Start:    $network $syslog
+# Required-Stop:     $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Vote ATX service
+# Description:       Start the Ruby RACK server that runs the Vote ATX web service.
+### END INIT INFO
 
+### Begin config items
+#
 HOME="/home/ubuntu"
 APP_ROOT="$HOME/voteatx-svc"
 APP_USER="ubuntu:ubuntu"
 SVC="voteatx-svc"
+PROG="$APP_ROOT/bin/voteatx-svc"
+#
+### End config items
 
 USAGE="usage: $0 {start|stop|restart|status|start}"
 
@@ -17,10 +31,6 @@ do_start() {
 	if [ $? -eq 0 ] ; then
 		die "$0: Service $SVC already running"
 	fi
-	 daemon \
-		--pidfile="$APP_ROOT/log/$SVC.pid" \
-		--name="$SVC" \
- 		--running
 
 	echo "Starting $SVC ... \c"
 	daemon -v \
@@ -33,7 +43,7 @@ do_start() {
 		--pidfile="$APP_ROOT/log/$SVC.pid" \
 		--output="$APP_ROOT/log/$SVC.run" \
 		--name="$SVC" \
-		bundle exec $APP_ROOT/bin/voteatx-svc 
+		bundle exec $PROG 
 	echo "OK"
 }
 
