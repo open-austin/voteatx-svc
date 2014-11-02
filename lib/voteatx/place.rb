@@ -130,7 +130,10 @@ module VoteATX
 
         now = options[:time] || Time.now
 
-	place = search_query(db, :place_type => "ELECTION_DAY", :precinct => precinct).first
+	rs = search_query(db, :place_type => "ELECTION_DAY", :precinct => precinct) \
+	  .join(:voting_precincts, :voting_place_id => :voting_places__id)
+        place = rs.first
+
         raise "cannot find election day voting place for precinct \"#{precinct}\"" unless place
         raise "cannot find election day voting location for precinct \"#{precinct}\"" unless place[:geometry]
 
@@ -142,17 +145,35 @@ module VoteATX
           :info => format_info(place))
       end
 
-      # Return the voting place for the voting district that contains the indicated location.
-      def self.find_by_location(db, origin, options = {})
-        district = db[:voting_districts] \
-          .select(:p_vtd) \
-          .select_append{AsGeoJSON(ST_Transform(:geometry, SRID_LATLNG)).as(:region)} \
-          .filter{ST_Contains(:geometry, ST_Transform(MakePoint(origin.lng, origin.lat, SRID_LATLNG), 3081))} \
-          .first
-        return nil unless district
+      def self.search(db, origin, options = {})
 
-        find_by_precinct(db, district[:P_VTD], options)
+        now = options[:time] || Time.now
+	max_places = options[:max_places] || VoteATX::MAX_PLACES
+	max_distance = options[:max_distance] || VoteATX::MAX_DISTANCE
+        ret = []
+
+        places = search_query(db, :place_type => "ELECTION_DAY") \
+	  .select_append{ST_Distance(geometry, MakePoint(origin.lng, origin.lat, SRID_LATLNG)).as(:dist)} \
+	  .filter{dist <= max_distance} \
+	  .order(:dist.asc) \
+          .limit(max_places) \
+          .all
+
+        places.each do |place|
+          params = {
+            :id => place[:place_id],
+            :type => place[:place_type].to_sym,
+            :title => place[:title],
+	    :location => place,
+            :is_open => (now >= place[:opens]),
+	    :info => format_info(place),
+          }
+          ret << new(params)
+        end
+
+        ret
       end
+
 
     end # ElectionDay
 

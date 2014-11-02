@@ -10,7 +10,7 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 112,Dessau Elementary School,  ,1501 Dessau Ridge Lane,Austin,11/4/2014,7:00,19:00,78754,30.401533,-97.643749,NE,ED,R,401,G14,40
 113,Wieland Elementary School,  ,900 Tudor House Road,Pflugerville,11/4/2014,7:00,19:00,78660,30.422273,-97.639275,NE,ED,R,2334,G14,41
 117,Turner-Roberts Recreation Center,120,7201 Colony Loop Drive,Austin,11/4/2014,7:00,19:00,78724,30.300165,-97.636786,E,ED,R,2021,G14,42
-1210,Delco Center,  ,4601 Pecan Brook Dr.,Austin,11/4/2014,7:00,19:00,78724,30.318025,-97.661204,E,ED,R,433,G14,43
+,Delco Center,  ,4601 Pecan Brook Dr.,Austin,11/4/2014,7:00,19:00,78724,30.318025,-97.661204,E,ED,R,433,G14,43
 121,LBJ High School,"128, 131, 134",7309 Lazy Creek Drive,Austin,11/4/2014,7:00,19:00,78724,30.3131,-97.65676,E,ED,R,1201,G14,44
 122,YMCA East Community Branch,  ,5315 Ed Bluestein Boulevard,Austin,11/4/2014,7:00,19:00,78723,30.292079,-97.662262,E,ED,R,2500,G14,45
 123,Murchison Elementary School,  ,2215 Kelly Lane,Pflugerville,11/4/2014,7:00,19:00,78660,30.467253,-97.586918,NE,ED,R,1336,G14,46
@@ -30,7 +30,7 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 149,Reilly Elementary School,  ,405 Denson Drive,Austin,11/4/2014,7:00,19:00,78752,30.328359,-97.719923,NC,ED,R,1814,G14,60
 150,Brookhollow Elementary School,  ,1200 North Railroad Avenue,Pflugerville,11/4/2014,7:00,19:00,78660,30.452447,-97.618074,NE,ED,R,209,G14,61
 151,Dottie Jordan Recreation Center,  ,2803 Loyola Lane,Austin,11/4/2014,7:00,19:00,78723,30.314251,-97.673548,E,ED,R,430,G14,62
-1520,Fiesta Mart Central,  ,3909 North IH-35,Austin,11/4/2014,7:00,19:00,78722,30.29642,-97.71764,C,ED,R,623,G14,63
+,Fiesta Mart Central,  ,3909 North IH-35,Austin,11/4/2014,7:00,19:00,78722,30.29642,-97.71764,C,ED,R,623,G14,63
 152,Maplewood Elementary School,  ,3808 Maplewood Avenue,Austin,11/4/2014,7:00,19:00,78722,30.293096,-97.714301,E,ED,R,1318,G14,64
 153,Pioneer Crossing Elementary School,  ,11300 Samsung Boulevard,Austin,11/4/2014,7:00,19:00,78754,30.361804,-97.639875,E,ED,R,1673,G14,65
 154,Bluebonnet Trail Elementary School,"125, 127",11316 Farmhaven Road,Austin,11/4/2014,7:00,19:00,78754,30.351472,-97.618289,E,ED,R,244,G14,66
@@ -100,7 +100,7 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 317,Lost Creek MUD Office,  ,1305 Quaker Ridge Drive,Austin,11/4/2014,7:00,19:00,78746,30.28377,-97.83352,W,ED,R,1235,G14,130
 319,Lakeway Activity Center,306,105 Cross Creek Drive,Lakeway,11/4/2014,7:00,19:00,78734,30.362589,-97.981294,W,ED,R,1211,G14,131
 320,Randalls Lakeway,  ,2301 RR 620 South,Lakeway,11/4/2014,7:00,19:00,78734,30.341584,-97.966429,W,ED,R,1845,G14,132
-3230,Randalls Research,  ,10900-D Research Boulevard,Austin,11/4/2014,7:00,19:00,78759,30.401991,-97.747132,NE,ED,R,709,G14,134
+,Randalls Research,  ,10900-D Research Boulevard,Austin,11/4/2014,7:00,19:00,78759,30.401991,-97.747132,NE,ED,R,709,G14,134
 323,Great Hills Baptist Church,"321, 305, 345",10500 Jollyville Road,Austin,11/4/2014,7:00,19:00,78759,30.39879,-97.7521,NW,ED,R,1841,G14,133
 324,Bee Cave City Hall,368,4000 Galleria Parkway,Bee Cave,11/4/2014,7:00,19:00,78738,30.308171,-97.939939,W,ED,R,246,G14,135
 326,Laurel Mountain Elementary School,  ,10111 DK Ranch Road,Austin,11/4/2014,7:00,19:00,78759,30.413978,-97.781153,NW,ED,R,1213,G14,136
@@ -124,7 +124,7 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 347,Hill Country Middle School,  ,1300 Walsh Tarlton Lane,Austin,11/4/2014,7:00,19:00,78746,30.270465,-97.803774,W,ED,R,829,G14,154
 349,ACC Pinnacle Campus,  ,7748 Highway 290 West,Austin,11/4/2014,7:00,19:00,78736,30.23149,-97.88354,SW,ED,R,131,G14,155
 350,Cowan Elementary School,309,2817 Kentish,Austin,11/4/2014,7:00,19:00,78748,30.188686,-97.833724,S,ED,R,317,G14,156
-3510,Randalls South Mopac,  ,6600 South Mopac Expressway,Austin,11/4/2014,7:00,19:00,78749,30.22278,-97.836277,SW,ED,R,1952,G14,157
+,Randalls South Mopac,  ,6600 South Mopac Expressway,Austin,11/4/2014,7:00,19:00,78749,30.22278,-97.836277,SW,ED,R,1952,G14,157
 351,Small Middle School,  ,4801 Monterey Oaks Boulevard,Austin,11/4/2014,7:00,19:00,78749,30.23417,-97.84149,SW,ED,R,1843,G14,158
 354,Travis Country Office (H.O.A.),  ,4504 Travis Country Circle,Austin,11/4/2014,7:00,19:00,78735,30.245949,-97.827448,SW,ED,R,2026,G14,159
 358,Covington Middle School,352,3700 Convict Hill Road,Austin,11/4/2014,7:00,19:00,78749,30.212073,-97.834582,SW,ED,R,318,G14,160
@@ -160,10 +160,10 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 421,Congress Avenue Baptist Church,  ,1511 South Congress Avenue,Austin,11/4/2014,7:00,19:00,78704,30.248493,-97.74946,SC,ED,R,337,G14,190
 422,Fulmore Middle School,  ,201 East Mary Street,Austin,11/4/2014,7:00,19:00,78704,30.24424,-97.749948,S,ED,R,621,G14,191
 423,Montopolis Recreation Center,  ,1200 Montopolis Drive,Austin,11/4/2014,7:00,19:00,78741,30.232282,-97.700129,SE,ED,R,1331,G14,192
-4240,HEB South Congress,  ,2400 South Congress Avenue,Austin,11/4/2014,7:00,19:00,78704,30.239642,-97.755452,S,ED,R,1945,G14,193
+,HEB South Congress,  ,2400 South Congress Avenue,Austin,11/4/2014,7:00,19:00,78704,30.239642,-97.755452,S,ED,R,1945,G14,193
 424,South Austin Recreation Center,  ,1100 Cumberland Road,Austin,11/4/2014,7:00,19:00,78704,30.24139,-97.76862,S,ED,R,836,G14,194
 426,Govalle Elementary School,"427, 436, 444",3601 Govalle Avenue,Austin,11/4/2014,7:00,19:00,78702,30.264386,-97.698573,E,ED,R,1677,G14,195
-4260,Parque Zaragoza Recreation Center,  ,2608 Gonzales Street,Austin,11/4/2014,7:00,19:00,78702,30.261812,-97.711635,E,ED,R,708,G14,196
+,Parque Zaragoza Recreation Center,  ,2608 Gonzales Street,Austin,11/4/2014,7:00,19:00,78702,30.261812,-97.711635,E,ED,R,708,G14,196
 429,Dan Ruiz Branch Public Library,  ,1600 Grove Boulevard,Austin,11/4/2014,7:00,19:00,78741,30.229915,-97.706995,SE,ED,R,417,G14,197
 431,Baty Elementary School,  ,2101 Faro Drive,Austin,11/4/2014,7:00,19:00,78741,30.226785,-97.714055,SE,ED,R,254,G14,198
 433,Travis High School,442,1211 East Oltorf Street,Austin,11/4/2014,7:00,19:00,78704,30.234034,-97.743269,S,ED,R,2031,G14,199
@@ -173,7 +173,7 @@ Pct.,Name,Combined Pcts.,Address,City,Date,Start Time,End Time,Zip Code,Latitude
 439,Cantu/Pan Am Recreation Center,  ,2100 East 3rd Street,Austin,11/4/2014,7:00,19:00,78702,30.258039,-97.720878,E,ED,R,331,G14,203
 440,CityView at the Park Senior Apts,  ,2000 Woodward Street,Austin,11/4/2014,7:00,19:00,78741,30.21825,-97.74335,SE,ED,R,349,G14,204
 441,St. John's Lutheran Church,  ,409 West Ben White Boulevard,Austin,11/4/2014,7:00,19:00,78704,30.22434,-97.76793,S,ED,R,624,G14,206
-4410,Fiesta Mart Stassney,  ,5510 South IH 35,Austin,11/4/2014,7:00,19:00,78745,30.20035,-97.76433,SE,ED,R,1936,G14,205
+,Fiesta Mart Stassney,  ,5510 South IH 35,Austin,11/4/2014,7:00,19:00,78745,30.20035,-97.76433,SE,ED,R,1936,G14,205
 443,Mendez Middle School,  ,5106 Village Square,Austin,11/4/2014,7:00,19:00,78744,30.188102,-97.743655,SE,ED,R,1332,G14,207
 446,St. Elmo Elementary School,425,600 West St. Elmo Road,Austin,11/4/2014,7:00,19:00,78745,30.221686,-97.773213,S,ED,R,1939,G14,208
 447,Odom Elementary School,419,1010 Turtle Creek Boulevard,Austin,11/4/2014,7:00,19:00,78745,30.205599,-97.789521,S,ED,R,1582,G14,209

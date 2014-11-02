@@ -245,6 +245,8 @@ module VoteATX
     # If true, combined precincts are represented by a single
     # entry.
     #
+    # WARNING - this setting is deprecated and no longer used
+    #
     attr_accessor :explode_combined_precincts
 
     # Create a new loader instance.
@@ -260,8 +262,6 @@ module VoteATX
     def initialize(dbname, options = {})
       @dbname = dbname
       @debug = options.has_key?(:debug) ? options.delete(:debug) : false
-
-      @explode_combined_precincts = options.has_key?(:explode_combined_precincts) ? options.delete(:explode_combined_precincts) : false
 
       @log = options.delete(:log) || Logger.new($stderr)
       @log.level = (@debug ? Logger::DEBUG : Logger::INFO)
@@ -496,13 +496,19 @@ module VoteATX
         primary_key :id
         String :place_type, :index => true, :size => 16, :null => false
         String :title, :size => 80, :null => false
-        Integer :precinct, :unique => true, :null => true
         foreign_key :location_id, :voting_locations, :null => false
         foreign_key :schedule_id, :voting_schedules, :null => false
         Text :notes
       end
-    end
 
+      @log.debug("create_tables: creating table \"voting_precincts\" ...")
+      @db.create_table :voting_precincts do
+        primary_key :precinct
+        foreign_key :voting_place_id, :voting_places, :null => false
+        Text :notes
+      end
+
+    end # create_tables
 
     # Create an entry in the "voting_locations" table for this location,
     # return database row id.
@@ -595,28 +601,43 @@ module VoteATX
 
         cleanup_row(row)
 
-        p0 = row.field_by_id(:PCT).to_i
-        raise "failed to parse precinct from: #{row}" if p0 == 0
-        precincts = [p0]
+        precincts = []
 
-        location = make_location(row)
+        pct = row.field_by_id(:PCT, :empty_ok => true)
+        precincts << pct.to_i unless pct.empty?
 
-        notes = nil
         unless row.field_by_id(:COMBINED_PCTS, :empty_ok => true).empty?
           precincts += row.field_by_id(:COMBINED_PCTS).split(/[,:]/).map {|s| s.to_i}
+        end
+
+        case precincts.length
+        when 0
+          notes = "Election day vote center"
+        when 1
+          notes = "Precinct " + precincts.first.to_s
+        else
           notes = "Combined precincts " + precincts.sort.join(", ")
         end
 
-	(@explode_combined_precincts ? precincts : [p0]).each do |precinct|
-          @db[:voting_places] << {
-            :place_type => "ELECTION_DAY",
-            :title => "Precinct #{precinct}",
-            :precinct => precinct,
-            :location_id => location[:id],
-            :schedule_id => schedule[:id],
-            :notes => notes,
+        location = make_location(row)
+
+        rec = {
+          :place_type => "ELECTION_DAY",
+          :title => "Election day voting place",
+          :location_id => location[:id],
+          :schedule_id => schedule[:id],
+          :notes => notes,
+        }
+
+        vpid = @db[:voting_places].insert(rec)
+
+        precincts.each do |pct|
+          @db[:voting_precincts] << {
+            :precinct => pct,
+            :voting_place_id => vpid,
           }
         end
+
       end
     end
 

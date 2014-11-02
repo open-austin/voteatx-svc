@@ -90,6 +90,12 @@ module VoteATX
     def search(lat, lng, options = {})
       origin = FindIt::Location.new(lat, lng, :DEG)
 
+      #
+      # FIXME - This method has been hacked to return a list of
+      # nearby election day voting places. This needs to be fixed
+      # to restore early voting place functionality.
+      #
+
       search_options = {}
       options.each do |k, v|
         next if v.nil? || v.empty?
@@ -131,26 +137,29 @@ module VoteATX
         response[:districts][:city_council] = a.to_h
       end
 
-      a = if precinct
-        VoteATX::Place::ElectionDay.find_by_precinct(@db, precinct.id, search_options)
-      else
-        VoteATX::Place::ElectionDay.find_by_location(@db, origin, search_options)
-      end
-      if a
-        response[:places] << a.to_h
-      end
-
-      a = VoteATX::Place::Early.search(@db, origin, search_options)
-      if a
-        response[:places] += a.map {|b| b.to_h}
-      end
-
       response[:districts].keys.each do |district|
         r = response[:districts][district][:region]
         if r.to_s.length > MAX_REGION_ON_SEARCH
           response[:districts][district][:region] = true
         end
       end
+
+      places = VoteATX::Place::ElectionDay.search(@db, origin, search_options)
+      response[:places] = places.map {|a| a.to_h}
+
+#      a = if precinct
+#        VoteATX::Place::ElectionDay.find_by_precinct(@db, precinct.id, search_options)
+#      else
+#        VoteATX::Place::ElectionDay.find_by_location(@db, origin, search_options)
+#      end
+#      if a
+#        response[:places] << a.to_h
+#      end
+#
+#      a = VoteATX::Place::Early.search(@db, origin, search_options)
+#      if a
+#        response[:places] += a.map {|b| b.to_h}
+#      end
 
       return response
     end
