@@ -612,18 +612,19 @@ module VoteATX
 
         case precincts.length
         when 0
-          notes = "Election day vote center"
+          title = "Election day vote center"
         when 1
-          notes = "Precinct " + precincts.first.to_s
+          title = "Precinct " + precincts.first.to_s
         else
-          notes = "Combined precincts " + precincts.sort.join(", ")
+          title = "Combined precincts " + precincts.sort.join(", ")
         end
+        notes = "Registered voters can vote at any open voting place on election day."
 
         location = make_location(row)
 
         rec = {
           :place_type => "ELECTION_DAY",
-          :title => "Election day voting place",
+          :title => title,
           :location_id => location[:id],
           :schedule_id => schedule[:id],
           :notes => notes,
