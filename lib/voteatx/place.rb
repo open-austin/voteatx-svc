@@ -165,7 +165,7 @@ module VoteATX
             :type => place[:place_type].to_sym,
             :title => place[:title],
 	    :location => place,
-            :is_open => (now >= place[:opens]),
+            :is_open => (now >= place[:opens] && now < place[:closes]),
 	    :info => format_info(place),
           }
           ret << new(params)
