@@ -116,10 +116,11 @@ module VoteATX
       response = {
         :districts => {},
         :places => [],
-#        :message => {
-#          :severity => :WARNING,
-#          :content => "This app is displaying voting place information for the May 2014 election.  We will update this app once voting place information for the Nov 4, 2014 election is released."
-#        }
+        :message => {
+          :severity => :WARNING,
+          :id => "20141105.01",
+          :content => "Results are for the past Nov 2014 election. We will post an update for the Dec 2014 run-off election once the voting place information is released by Travis County."
+        }
       }
 
       precinct = VoteATX::District::Precinct.find(@db, origin)

@@ -105,12 +105,18 @@ A message to be displayed to the user.
 * severity -- Message severity. Possible values are: "ERROR", "WARNING",
     "INFO".
 * content -- Message content, plain text.
+* id -- An optional identifier for "one-time" messages.
+
+If the message contains an "id" field, the message should be shown once, and subsequent
+messages with the same id value may be ignored. This can be used to implement a "message
+of the day" type function.
 
 Example:
 
     {
        "severity" : "WARNING",
-       "content" : "Beware of low flying armadillos."
+       "content" : "Beware of low flying armadillos.",
+       "id" : "20141001"
     }
 
 ## Requests
