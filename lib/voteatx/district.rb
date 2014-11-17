@@ -26,6 +26,10 @@ module VoteATX
 
       TABLE = :voting_districts
 
+      def district_type
+        :precinct
+      end
+
       def self.find(db, origin)
         geo_column = db.geo_column(TABLE)
         geo_srid = db.geo_srid(TABLE)
@@ -58,6 +62,10 @@ module VoteATX
     class CityCouncil < Base
 
       TABLE = :council_districts
+
+      def district_type
+        :city_council
+      end
 
       def self.find(db, origin)
         geo_column = db.geo_column(TABLE)

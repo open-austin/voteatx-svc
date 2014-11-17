@@ -2,6 +2,7 @@ require 'findit-support'
 require 'cgi' # for escape_html
 require_relative './place.rb'
 require_relative './district.rb'
+require_relative './response.rb'
 
 class String
   def escape_html
@@ -89,6 +90,7 @@ module VoteATX
     #
     def search(lat, lng, options = {})
       origin = FindIt::Location.new(lat, lng, :DEG)
+      now = Time.now
 
       #
       # FIXME - This method has been hacked to return a list of
@@ -102,7 +104,7 @@ module VoteATX
         case k
         when :time
           begin
-            search_options[k] = Time.parse(v)
+            search_options[k] = now = Time.parse(v)
           rescue ArgumentError
             # ignore
           end
@@ -113,40 +115,24 @@ module VoteATX
         end
       end
 
-      response = {
-        :districts => {},
-        :places => [],
-        :message => {
-          :severity => :WARNING,
-          :id => "20141105.01",
-          :content => "Results are for the past Nov 2014 election. We will post an update for the Dec 2014 run-off election once the voting place information is released by Travis County."
-        }
-      }
+      response = VoteATX::Response.new
+
+      response.info("Results are for the past Nov 2014 election. We will post an update for the Dec 2014 run-off election once the voting place information is released by Travis County.", :id => "20141105.01")
 
       precinct = VoteATX::District::Precinct.find(@db, origin)
       if precinct
-        response[:districts][:precinct] = precinct.to_h
+        response.add_district(precinct)
       else
-        response[:message] = {
-          :severity => :WARNING,
-          :content => "The location you have selected is outside the Travis County voting area.",
-        }
+        response.warning("The location you have selected is outside the Travis County voting area.");
       end
 
-      a = VoteATX::District::CityCouncil.find(@db, origin)
-      if a
-        response[:districts][:city_council] = a.to_h
-      end
-
-      response[:districts].keys.each do |district|
-        r = response[:districts][district][:region]
-        if r.to_s.length > MAX_REGION_ON_SEARCH
-          response[:districts][district][:region] = true
-        end
-      end
+      council_district = VoteATX::District::CityCouncil.find(@db, origin)
+      response.add_district(council_district) if council_district
 
       places = VoteATX::Place::ElectionDay.search(@db, origin, search_options)
-      response[:places] = places.map {|a| a.to_h}
+      places.each do |p|
+        response.add_place(p)
+      end
 
 #      a = if precinct
 #        VoteATX::Place::ElectionDay.find_by_precinct(@db, precinct.id, search_options)
@@ -162,7 +148,7 @@ module VoteATX
 #        response[:places] += a.map {|b| b.to_h}
 #      end
 
-      return response
+      return response.to_h
     end
 
   end # module Finder
