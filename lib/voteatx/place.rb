@@ -91,6 +91,21 @@ module VoteATX
       end
 
 
+      def self.is_past(db, schedule_id, now = Time.now)
+        rs = db[:voting_schedule_entries] \
+          .filter(:schedule_id => schedule_id) \
+          .filter{closes > now}
+        (rs.count == 0)
+      end
+
+      def self.is_open(db, schedule_id, now = Time.now)
+        rs = db[:voting_schedule_entries] \
+          .filter(:schedule_id => schedule_id) \
+          .filter{opens <= now} \
+          .filter{closes > now}
+        (rs.count > 0)
+      end
+
       # Convenience function to create a search query for a voting place.
       #
       # This is used in the #search methods to create a Sequel result set
@@ -110,8 +125,8 @@ module VoteATX
           .select_append{ST_Y(:voting_locations__geometry).as(:latitude)} \
 	  .filter(conditions) \
 	  .join(:voting_locations, :id => :location_id) \
-	  .join(:voting_schedules, :id => :voting_places__schedule_id) \
-	  .join(:voting_schedule_entries, :schedule_id => :id)
+	  .join(:voting_schedules, :id => :voting_places__schedule_id)
+	  #.join(:voting_schedule_entries, :schedule_id => :id)
       end
 
       # A derived class must override this method.
@@ -141,7 +156,7 @@ module VoteATX
           :type => :ELECTION_DAY,
           :title => "Voting place for precinct #{precinct}",
 	  :location => place,
-          :is_open => (now >= place[:opens] && now < place[:closes]),
+          :is_open => is_open(db, place[:schedule_id], now),
           :info => format_info(place))
       end
 
@@ -165,7 +180,7 @@ module VoteATX
             :type => place[:place_type].to_sym,
             :title => place[:title],
 	    :location => place,
-            :is_open => (now >= place[:opens] && now < place[:closes]),
+            :is_open => is_open(db, place[:schedule_id], now),
 	    :info => format_info(place),
           }
           ret << new(params)
@@ -197,61 +212,51 @@ module VoteATX
         now = options[:time] || Time.now
 	max_places = options[:max_places] || VoteATX::MAX_PLACES
 	max_distance = options[:max_distance] || VoteATX::MAX_DISTANCE
-        ret = []
 
-        #
-        # A given mobile voting place may appear in the databases search
-        # query multiple times, if it's in operation multiple times
-        # during the voting period. We want to consider just the first
-        # (earliest) entry. The did_place list tracks voting places
-        # we've seen, to filter out the dupes.
-        #
-        did_place = {}
+        places = []
+        closest_place = nil
 
-	early_place = search_query(db, :place_type => "EARLY_FIXED") \
+	rs = search_query(db, :place_type => "EARLY_FIXED") \
 	  .select_append{ST_Distance(geometry, MakePoint(origin.lng, origin.lat, SRID_LATLNG)).as(:dist)} \
 	  .filter{dist <= max_distance} \
-	  .order(:dist.asc) \
-	  .first
+	  .order(:dist.asc)
 
-	return [] unless early_place
+        rs.each do |place|
 
-        rs = db[:voting_schedule_entries] \
-          .filter(:schedule_id => early_place[:schedule_id]) \
-          .filter{opens <= now} \
-          .filter{closes > now}
-	is_open = (rs.count > 0)
+          dist = place[:dist]
+          if ! closest_place
+            closest_place = place
+          else
+            break if dist > 1.5 * closest_place[:dist]
+          end
 
-        ret << new(:id => early_place[:place_id],
-          :type => :EARLY_VOTING_FIXED,
-          :title => "Early voting location",
-	  :location => early_place,
-          :is_open => is_open,
-          :info => format_info(early_place))
-
-        did_place[early_place[:place_id]] = true
-
-        rs = mobile_places = search_query(db, :place_type => "EARLY_MOBILE") \
-	  .select_append{ST_Distance(geometry, MakePoint(origin.lng, origin.lat, SRID_LATLNG)).as(:dist)} \
-          .filter{dist < 1.5*early_place[:dist]} \
-          .filter{closes > now} \
-          .order(:opens.asc, :dist.asc)
-
-	mobile_places = rs.limit(max_places - 1).all
-
-        mobile_places.each do |place|
-          next if did_place[place[:place_id]]
-          did_place[place[:place_id]] = true
-	  is_open = (now >= place[:opens])
-          ret << new(:id => place[:place_id],
-            :type => :EARLY_VOTING_MOBILE,
-            :title => "Mobile early voting location",
-	    :location => place,
-            :is_open => is_open,
-	    :info => format_info(place))
+          places << new(:id => place[:place_id],
+            :type => :EARLY_VOTING_FIXED,
+            :title => "Early voting location",
+            :location => place,
+            :is_open => is_open(db, place[:schedule_id], now),
+            :info => format_info(place))
         end
 
-        ret
+        return [] if places.empty?
+
+	rs = search_query(db, :place_type => "EARLY_MOBILE") \
+	  .select_append{ST_Distance(geometry, MakePoint(origin.lng, origin.lat, SRID_LATLNG)).as(:dist)} \
+	  .filter{dist <= 1.5 * closest_place[:dist]} \
+	  .order(:dist.asc)
+
+        rs.each do |place|
+          next if is_past(db, place[:schedule_id], now)
+          places << new(:id => place[:place_id],
+            :type => :EARLY_VOTING_MOBILE,
+            :title => "Mobile early voting location",
+            :location => place,
+            :is_open => is_open(db, place[:schedule_id], now),
+            :info => format_info(place))
+          break if places.length >= max_places
+        end
+
+        places
       end
 
     end
