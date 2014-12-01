@@ -126,24 +126,35 @@ module VoteATX
       f = VoteATX::VotingPlace::Finder.new(@db, search_options)
       f.origin = origin
 
-      #
-      # Election Day algorithm
-      #
-#      places = f.search_election_day_places
-#      places.each do |p|
-#        response.add_place(p)
-#      end
+      today = now.to_date
+      if today > $params.date_early_voting_ends
 
-      #
-      # Early Voting algorithm
-      #
-      if precinct
-        p = f.find_election_day_place_by_precinct(precinct.id)
-        response.add_place(p) if p
-      end
-      places = f.search_early_places
-      places.each do |p|
-        response.add_place(p)
+        #
+        # Election Day algorithm
+        #
+        places = f.search_election_day_places
+        places.each do |p|
+          response.add_place(p)
+        end
+
+        if today > $params.date_election_day
+          response.warning("You are viewing historical data, for the election that was held #{$params.date_election_day.strftime("%b %d, %Y")}.")
+        end
+
+      else
+
+        #
+        # Early Voting algorithm
+        #
+        if precinct
+          p = f.find_election_day_place_by_precinct(precinct.id)
+          response.add_place(p) if p
+        end
+        places = f.search_early_places
+        places.each do |p|
+          response.add_place(p)
+        end
+
       end
 
       return response.to_h
