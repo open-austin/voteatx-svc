@@ -252,8 +252,6 @@ module VoteATX
     # If true, combined precincts are represented by a single
     # entry.
     #
-    # WARNING - this setting is deprecated and no longer used
-    #
     attr_accessor :explode_combined_precincts
 
     # Create a new loader instance.
@@ -618,8 +616,11 @@ module VoteATX
         pct = row.field_by_id(:PCT, :empty_ok => true)
         precincts << pct.to_i unless pct.empty?
 
-        unless row.field_by_id(:COMBINED_PCTS, :empty_ok => true).empty?
-          precincts += row.field_by_id(:COMBINED_PCTS).split(/[,:]/).map {|s| s.to_i}
+        if @explode_combined_precincts
+          a = row.field_by_id(:COMBINED_PCTS, :empty_ok => true)
+          unless a.empty?
+            precincts += a.split(/[,:]/).map {|s| s.to_i}
+          end
         end
 
         case precincts.length

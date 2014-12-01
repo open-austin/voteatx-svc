@@ -20,7 +20,6 @@ shpl.load(:shapefile => "../../council-districts/2014/single_member_districts.sh
 loader = VoteATX::VotingPlacesLoader.new(dbname, :log => @log, :debug => false)
 
 
-
 ####
 #
 # The "election_code" is used to determine sample ballots.
@@ -106,7 +105,7 @@ EARLY_VOTING_FIXED_HOURS = {
   ],
 
   # Mon-Thur 10am-7pm, Fri Closed, Sat 10am-5pm, Sun Closed
-  'V|Carver Museum' => [
+  'V|Carver Branch Library' => [
     Time.new(2014, 12,  1, 10,  0) .. Time.new(2014, 12,  1, 19,  0), # Mo
     Time.new(2014, 12,  2, 10,  0) .. Time.new(2014, 12,  2, 19,  0), # Tu
     Time.new(2014, 12,  3, 10,  0) .. Time.new(2014, 12,  3, 19,  0), # We
@@ -216,12 +215,21 @@ loader.valid_zip_regexp = /^78[67]\d\d$/
 
 #####
 #
+# Set "explode_combined_precincts" true if the "Combined Pcts" needs to be
+# exploded into multiple rows. Set it false if there will be a row
+# per precinct.
+#
+#
+loader.explode_combined_precincts = false
+
+#####
+#
 # Perform the load.
 #
 
 loader.create_tables
-loader.load_evfixed_places("20141216_GR14_Webload_FINAL_EVPerm.csv", EARLY_VOTING_FIXED_HOURS)
-loader.load_evmobile_places("20141216_GR14_Webload_FINAL_EVMobile.csv")
-loader.load_eday_places("20141216_GR14_Webload_FINAL_EDay.csv", ELECTION_DAY_HOURS)
+loader.load_evfixed_places("20141216_GR14_EVPerm.csv", EARLY_VOTING_FIXED_HOURS)
+loader.load_evmobile_places("20141216_GR14_EVMobile.csv")
+loader.load_eday_places("20141216_GR14_EDay.csv", ELECTION_DAY_HOURS)
 loader.log.info("done")
 
