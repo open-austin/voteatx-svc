@@ -2,9 +2,9 @@ module VoteATX
   class Message
 
     module Severity
-      ERROR = "error"
-      WARNING = "warning"
-      INFO = "info"
+      ERROR = "ERROR"
+      WARNING = "WARNING"
+      INFO = "INFO"
       def self.valid?(val)
         [ERROR, WARNING, INFO].include?(val)
       end
