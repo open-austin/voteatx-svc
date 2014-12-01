@@ -113,8 +113,6 @@ module VoteATX
 
       response = VoteATX::Response.new
 
-      response.info("Results are for the past Nov 2014 election. We will post an update for the Dec 2014 run-off election once the voting place information is released by Travis County.", :id => "20141105.01")
-
       precinct = VoteATX::District::Precinct.find(@db, origin)
       if precinct
         response.add_district(precinct)
