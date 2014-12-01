@@ -123,10 +123,13 @@ module VoteATX
       council_district = VoteATX::District::CityCouncil.find(@db, origin)
       response.add_district(council_district) if council_district
 
+      f = VoteATX::VotingPlace::Finder.new(@db, search_options)
+      f.origin = origin
+
       #
       # Election Day algorithm
       #
-#      places = VoteATX::Place::ElectionDay.search(@db, origin, search_options)
+#      places = f.search_election_day_places
 #      places.each do |p|
 #        response.add_place(p)
 #      end
@@ -135,10 +138,10 @@ module VoteATX
       # Early Voting algorithm
       #
       if precinct
-        p = VoteATX::Place::ElectionDay.find_by_precinct(@db, precinct.id, search_options)
+        p = f.find_election_day_place_by_precinct(precinct.id)
         response.add_place(p) if p
       end
-      places = VoteATX::Place::Early.search(@db, origin, search_options)
+      places = f.search_early_places
       places.each do |p|
         response.add_place(p)
       end
