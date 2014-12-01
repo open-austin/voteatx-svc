@@ -113,15 +113,15 @@ module VoteATX
 
       response = VoteATX::Response.new
 
-      precinct = VoteATX::District::Precinct.find(@db, origin)
-      if precinct
-        response.add_district(precinct)
-      else
-        response.warning("The location you have selected is outside the Travis County voting area.");
-      end
-
       council_district = VoteATX::District::CityCouncil.find(@db, origin)
       response.add_district(council_district) if council_district
+
+      precinct = VoteATX::District::Precinct.find(@db, origin)
+      if ! precinct
+        response.warning("The location you have selected is outside the Travis County voting area. If you are looking for Williamson County voting places visit: http://tinyurl.com/qe7ayjp");
+        return response.to_h
+      end
+      response.add_district(precinct)
 
       f = VoteATX::VotingPlace::Finder.new(@db, search_options)
       f.origin = origin
