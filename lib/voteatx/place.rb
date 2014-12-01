@@ -3,11 +3,6 @@ require 'findit-support'
 module VoteATX
   class VotingPlace
 
-    def self.load_defs(db)
-      @@election_description ||= db[:election_defs][:name => "ELECTION_DESCRIPTION"][:value]
-      @@election_info ||= db[:election_defs][:name => "ELECTION_INFO"][:value]
-    end
-
     # Create a new voting place instance.
     #
     def initialize(place)
@@ -19,8 +14,8 @@ module VoteATX
 
       info = []
       info << "<b>" + @place[:title].escape_html + "</b>"
-      unless @@election_description.empty?
-        info << "<i>" + @@election_description.escape_html + "</i>"
+      unless $params.election_description.empty?
+        info << "<i>" + $params.election_description.escape_html + "</i>"
         info << ""
       end
 
@@ -35,9 +30,9 @@ module VoteATX
         info << ""
         info << @place[:notes].escape_html
       end
-      unless @@election_info.empty?
+      unless $params.election_info.empty?
         info << ""
-        info << @@election_info
+        info << $params.election_info
       end
       info.join("\n")
     end
@@ -73,7 +68,6 @@ module VoteATX
         @max_places = options.delete(:max_places) || VoteATX::MAX_PLACES
         @max_distance = options.delete(:max_distance) || VoteATX::MAX_DISTANCE
         raise "unknown option(s): #{options.keys.join(', ')}" unless options.empty?
-        VoteATX::VotingPlace.load_defs(@db)
       end
 
       def is_past(schedule_id)

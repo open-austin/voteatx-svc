@@ -216,6 +216,13 @@ module VoteATX
     # Regexp to validate zipcode values
     attr_accessor :valid_zip_regexp
 
+    # Key election dates.
+    attr_accessor :date_early_voting_begins, :date_early_voting_ends, :date_election_day
+
+    # TODO
+    #
+    attr_accessor :election_code
+
     # A one-line description of the election
     #
     # Example: "for the Nov 5, 2013 general election in Travis County"
@@ -456,11 +463,16 @@ module VoteATX
 
       @log.debug("create_tables: creating table \"election_defs\" ...")
       @db.create_table :election_defs do
-        String :name, :index => true, :size => 16, :null => false
+        String :name, :unique => true, :size => 16, :null => false
         Text :value
       end
+
+      @db[:election_defs] << {:name => "ELECTION_CODE", :value => @election_code}
       @db[:election_defs] << {:name => "ELECTION_DESCRIPTION", :value => @election_description}
       @db[:election_defs] << {:name => "ELECTION_INFO", :value => @election_info}
+      @db[:election_defs] << {:name => "DATE_EARLY_VOTING_BEGINS", :value => @date_early_voting_begins}
+      @db[:election_defs] << {:name => "DATE_EARLY_VOTING_ENDS", :value => @date_early_voting_ends}
+      @db[:election_defs] << {:name => "DATE_ELECTION_DAY", :value => @date_election_day}
 
       @log.debug("create_tables: creating table \"voting_locations\" ...")
       @db.create_table :voting_locations do

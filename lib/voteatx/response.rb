@@ -43,6 +43,7 @@ module VoteATX
         :districts => @districts,
         :places => @places,
         :message => @message.to_h,
+        :params => $params.to_h,
       }
     end
 

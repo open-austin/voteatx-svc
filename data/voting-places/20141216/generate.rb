@@ -20,6 +20,24 @@ shpl.load(:shapefile => "../../council-districts/2014/single_member_districts.sh
 loader = VoteATX::VotingPlacesLoader.new(dbname, :log => @log, :debug => false)
 
 
+
+####
+#
+# The "election_code" is used to determine sample ballots.
+#
+
+loader.election_code = "GR14"
+
+
+#####
+#
+# Key dates.
+#
+
+loader.date_early_voting_begins = Date.new(2014, 12, 1)
+loader.date_early_voting_ends = Date.new(2014, 12, 12)
+loader.date_election_day = Date.new(2014, 12, 16)
+
 #####
 #
 # A one-line description of the election

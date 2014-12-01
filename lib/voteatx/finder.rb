@@ -1,5 +1,6 @@
 require 'findit-support'
 require 'cgi' # for escape_html
+require_relative './election_params.rb'
 require_relative './place.rb'
 require_relative './district.rb'
 require_relative './response.rb'
@@ -73,6 +74,7 @@ module VoteATX
       @db.logger = options[:log] if options.has_key?(:log)
       @db.sql_log_level = :debug
 
+      $params = VoteATX::ElectionParams.new(@db)
     end
 
 
