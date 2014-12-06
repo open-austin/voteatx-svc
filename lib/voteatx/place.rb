@@ -59,10 +59,11 @@ module VoteATX
 
     class Finder
 
-      attr_accessor :db, :origin, :now, :max_places, :max_distance
+      attr_accessor :db, :juris, :origin, :now, :max_places, :max_distance
 
-      def initialize(db, options = {})
+      def initialize(db, juris, options = {})
         @db = db
+        @juris = juris
         @origin = options.delete(:origin)
         @now = options.delete(:time) || Time.now
         @max_places = options.delete(:max_places) || VoteATX::MAX_PLACES
@@ -92,7 +93,7 @@ module VoteATX
       # This is used in the #search methods to create a Sequel result set
       # for a query against the "voting_places" table.
       #
-      def search_query(place_type)
+      def search_query(juris, place_type)
         rs = @db[:voting_places] \
           .select_append(:voting_places__id.as(:place_id)) \
           \
@@ -104,7 +105,8 @@ module VoteATX
           .join(:voting_schedules, :id => :voting_places__schedule_id) \
           .select_append(:voting_schedules__formatted.as(:schedule_formatted)) \
           \
-          .filter(:place_type => place_type)
+          .filter(:voting_places__jurisdiction => juris) \
+          .filter(:voting_places__place_type => place_type)
 
         if @origin
           o = @origin
@@ -120,11 +122,11 @@ module VoteATX
 
 
       def find_election_day_place_by_precinct(precinct)
-        rs = search_query("ELECTION_DAY") \
+        rs = search_query(@juris, "ELECTION_DAY") \
           .join(:voting_precincts, :voting_place_id => :voting_places__id)
           .filter(:voting_precincts__precinct => precinct)
         place = rs.first
-        raise "cannot find election day voting place for precinct \"#{precinct}\"" unless place
+        return nil unless place
 
         place[:is_open] = is_open(place[:schedule_id])
         VoteATX::VotingPlace.new(place)
@@ -135,7 +137,7 @@ module VoteATX
         places = []
         max_distance = nil
 
-        rs = search_query("ELECTION_DAY").limit(max_places)
+        rs = search_query(@juris, "ELECTION_DAY").limit(max_places)
         rs.each do |place|
           max_distance ||= 1.5 * place[:dist]
           break if place[:dist] > max_distance
@@ -151,7 +153,7 @@ module VoteATX
         places = []
         max_distance = nil
 
-        rs = search_query("EARLY_FIXED").limit(max_places)
+        rs = search_query(@juris, "EARLY_FIXED").limit(max_places)
         rs.each do |place|
           max_distance ||= 1.5 * place[:dist]
           break if place[:dist] > max_distance
@@ -161,7 +163,7 @@ module VoteATX
 
         return [] if places.empty?
 
-        rs = search_query("EARLY_MOBILE").limit(max_places)
+        rs = search_query(@juris, "EARLY_MOBILE").limit(max_places)
         rs.each do |place|
           break if place[:dist] > max_distance
           next if is_past(place[:schedule_id])

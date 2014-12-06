@@ -504,7 +504,9 @@ module VoteATX
       @log.debug("create_tables: creating table \"voting_places\" ...")
       @db.create_table :voting_places do
         primary_key :id
-        String :place_type, :index => true, :size => 16, :null => false
+        String :jurisdiction, :size => 20, :null => false
+        String :place_type, :size => 16, :null => false
+        index [:jurisdiction, :place_type]
         String :title, :size => 80, :null => false
         foreign_key :location_id, :voting_locations, :null => false
         foreign_key :schedule_id, :voting_schedules, :null => false
@@ -513,7 +515,10 @@ module VoteATX
 
       @log.debug("create_tables: creating table \"voting_precincts\" ...")
       @db.create_table :voting_precincts do
-        primary_key :precinct
+        primary_key :id
+        String :jurisdiction, :size => 20, :null => false
+        String :precinct, :size => 12, :null => false
+        index [:jurisdiction, :precinct], :unique => true
         foreign_key :voting_place_id, :voting_places, :null => false
         Text :notes
       end
@@ -601,7 +606,7 @@ module VoteATX
     end
 
 
-    def load_eday_places(infile, hours)
+    def load_eday_places(infile, juris, hours)
       @log.info("load_eday_places: loading \"#{infile}\" ...")
 
       # Create schedule record for election day.
@@ -636,6 +641,7 @@ module VoteATX
         location = make_location(row)
 
         rec = {
+          :jurisdiction => juris,
           :place_type => "ELECTION_DAY",
           :title => title,
           :location_id => location[:id],
@@ -647,6 +653,7 @@ module VoteATX
 
         precincts.each do |pct|
           @db[:voting_precincts] << {
+            :jurisdiction => juris,
             :precinct => pct,
             :voting_place_id => vpid,
           }
@@ -656,7 +663,7 @@ module VoteATX
     end
 
 
-    def load_evfixed_places(infile, hours_by_code)
+    def load_evfixed_places(infile, juris, hours_by_code)
       @log.info("load_evfixed_places: loading \"#{infile}\" ...")
 
       # Create schedule records and formatted displays for early voting schedules.
@@ -686,6 +693,7 @@ module VoteATX
         end
 
         @db[:voting_places] << {
+          :jurisdiction => juris,
           :place_type => "EARLY_FIXED",
           :title => "Early Voting Location",
           :location_id => location[:id],
@@ -697,7 +705,7 @@ module VoteATX
     end
 
 
-    def load_evmobile_places(infile)
+    def load_evmobile_places(infile, juris)
       @log.info("load_evmobile_places: loading \"#{infile}\" ...")
 
       CSV.foreach(infile, :headers => true) do |row|
@@ -717,6 +725,7 @@ module VoteATX
           schedule = make_schedule([hours])
 
           @db[:voting_places] << {
+            :jurisdiction => juris,
             :place_type => "EARLY_MOBILE",
             :title => "Mobile Early Voting Location",
             :location_id => location[:id],

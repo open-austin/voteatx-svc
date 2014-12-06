@@ -228,8 +228,8 @@ loader.explode_combined_precincts = false
 #
 
 loader.create_tables
-loader.load_evfixed_places("20141216_GR14_EVPerm.csv", EARLY_VOTING_FIXED_HOURS)
-loader.load_evmobile_places("20141216_GR14_EVMobile.csv")
-loader.load_eday_places("20141216_GR14_EDay.csv", ELECTION_DAY_HOURS)
+loader.load_evfixed_places("20141216_GR14_EVPerm.csv", "TRAVIS", EARLY_VOTING_FIXED_HOURS)
+loader.load_evmobile_places("20141216_GR14_EVMobile.csv", "TRAVIS")
+loader.load_eday_places("20141216_GR14_EDay.csv", "TRAVIS", ELECTION_DAY_HOURS)
 loader.log.info("done")
 

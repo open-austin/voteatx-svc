@@ -43,7 +43,7 @@ module VoteATX
   #
   #    require 'voteatx'
   #    finder = VoteATX::Finder.new
-  #    voting_places = finder.search(latitude, longitude))
+  #    places = finder.search(latitude, longitude))
   #
   class Finder
 
@@ -83,6 +83,7 @@ module VoteATX
     # Parameters:
     # * lat - the latitude (degrees) of the location, as a Float.
     # * lng - the longitude (degrees) of the location, as a Float.
+    # * juris - the jurisdiction identifier, such as "TRAVIS".
     #
     # Options:
     # * :max_distance - Override :max_distance specified for constructor.
@@ -90,7 +91,7 @@ module VoteATX
     # * :time - A date/time string that is parsed and used for the current time.
     #   This is intended for use in testing.
     #
-    def search(lat, lng, options = {})
+    def search(lat, lng, juris, options = {})
       origin = FindIt::Location.new(lat, lng, :DEG)
       now = Time.now
 
@@ -116,14 +117,14 @@ module VoteATX
       council_district = VoteATX::District::CityCouncil.find(@db, origin)
       response.add_district(council_district) if council_district
 
-      precinct = VoteATX::District::Precinct.find(@db, origin)
+      precinct = VoteATX::District::Precinct.find(@db, juris, origin)
       if ! precinct
-        response.warning("The location you have selected is outside the Travis County voting area. If you are looking for Williamson County voting places visit: http://tinyurl.com/qe7ayjp");
+        response.error("The location you selected is outside the service area of this application.")
         return response.to_h
       end
       response.add_district(precinct)
 
-      f = VoteATX::VotingPlace::Finder.new(@db, search_options)
+      f = VoteATX::VotingPlace::Finder.new(@db, juris, search_options)
       f.origin = origin
 
       today = now.to_date

@@ -42,21 +42,28 @@ module VoteATX
       def search(params)
         lat = nil
         lng = nil
+        juris = nil
         query_opts = {}
 
         params.each do |k, v|
           k = k.to_sym
           case k
-          when :latitude
+          when :latitude, :lat
             lat = v.to_f
-          when :longitude
+          when :longitude, :lng
             lng = v.to_f
+          when :juris
+            juris = v
           when :time, :max_distance, :max_locations
             query_opts[k] = v
           end
         end
 
-        result = @@app.search(lat, lng, query_opts)
+        return [400, "\"lat\" undefined"] if lat.nil?
+        return [400, "\"lng\" undefined"] if lng.nil?
+        return [400, "\"juris\" undefined"] if juris.nil?
+
+        result = @@app.search(lat, lng, juris, query_opts)
 
         content_type :json
         jsonp result

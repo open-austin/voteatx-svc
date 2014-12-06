@@ -30,7 +30,7 @@ module VoteATX
         :precinct
       end
 
-      def self.find(db, origin)
+      def self.find(db, juris, origin)
         geo_column = db.geo_column(TABLE)
         geo_srid = db.geo_srid(TABLE)
 
