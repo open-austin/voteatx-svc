@@ -1,0 +1,72 @@
+I, [2014-10-05T16:03:22.679747 #4354]  INFO -- : starting shape file import:
+I, [2014-10-05T16:03:22.679906 #4354]  INFO -- :   source file: ../../voting-districts/2012/VTD2012a.shp
+I, [2014-10-05T16:03:22.679950 #4354]  INFO -- :   target database: voteatx.db
+I, [2014-10-05T16:03:22.679990 #4354]  INFO -- :   target table: voting_districts
+I, [2014-10-05T16:03:22.680676 #4354]  INFO -- : executing: spatialite_tool -i -shp ../../voting-districts/2012/VTD2012a -d voteatx.db -t voting_districts -s 3081 -c CP1252
+SQLite version: 3.8.3
+SpatiaLite version: 4.1.1
+Inserted 247 rows into 'voting_districts' from '../../voting-districts/2012/VTD2012a.shp'
+I, [2014-10-05T16:03:23.173957 #4354]  INFO -- : starting shape file import:
+I, [2014-10-05T16:03:23.174170 #4354]  INFO -- :   source file: ../../council-districts/2014/single_member_districts.shp
+I, [2014-10-05T16:03:23.174218 #4354]  INFO -- :   target database: voteatx.db
+I, [2014-10-05T16:03:23.174260 #4354]  INFO -- :   target table: council_districts
+I, [2014-10-05T16:03:23.174366 #4354]  INFO -- : executing: spatialite_tool -i -shp ../../council-districts/2014/single_member_districts -d voteatx.db -t council_districts -s 4269 -c CP1252
+SQLite version: 3.8.3
+SpatiaLite version: 4.1.1
+Inserted 10 rows into 'council_districts' from '../../council-districts/2014/single_member_districts.shp'
+I, [2014-10-05T16:03:23.302962 #4354]  INFO -- : loading database "voteatx.db" ...
+I, [2014-10-05T16:03:23.304462 #4354]  INFO -- : create_tables: creating database tables ...
+I, [2014-10-05T16:03:23.854973 #4354]  INFO -- : load_evfixed_places: loading "20141104_G14_Webload_FINAL_EVPerm.csv" ...
+I, [2014-10-05T16:03:24.594598 #4354]  INFO -- : load_evmobile_places: loading "20141104_G14_Webload_FINAL_Mobile.csv" ...
+W, [2014-10-05T16:03:24.996422 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:24.996557 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:24.996612 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:24.996714 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:24.996799 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:25.204084 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:25.204219 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:25.204275 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:25.204368 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:25.204454 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:25.542498 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:25.542700 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:25.542782 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:25.542883 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:25.542964 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:25.812828 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:25.812995 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:25.813051 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:25.813381 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:25.813549 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:25.929337 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:25.929472 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:25.929802 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:25.929994 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:25.930158 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:26.394415 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:26.394548 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:26.394604 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:26.394696 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:26.394825 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:26.826370 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:26.826535 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:26.826754 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:26.826940 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:26.827078 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:27.127826 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:27.127983 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:27.128040 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:27.128368 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:27.128540 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:27.511755 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:27.511922 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:27.512292 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:27.512462 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:27.512629 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+W, [2014-10-05T16:03:27.744581 #4354]  WARN -- : make_location: "street" value inconsistent with value in "locations" table
+W, [2014-10-05T16:03:27.744713 #4354]  WARN -- :   record id = "25"
+W, [2014-10-05T16:03:27.744767 #4354]  WARN -- :   location name = "ACC Rio Grande Campus"
+W, [2014-10-05T16:03:27.744877 #4354]  WARN -- :   stored street = "1212 Rio Grande St."
+W, [2014-10-05T16:03:27.744966 #4354]  WARN -- :   new street    = "1212 Rio Grande Street"
+I, [2014-10-05T16:03:27.957309 #4354]  INFO -- : load_eday_places: loading "20141104_G14_Webload_FINAL_EDay.csv" ...
+I, [2014-10-05T16:03:33.023321 #4354]  INFO -- : done
