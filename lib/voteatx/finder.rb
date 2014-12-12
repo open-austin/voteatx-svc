@@ -2,6 +2,7 @@ require 'findit-support'
 require 'cgi' # for escape_html
 require_relative './election_params.rb'
 require_relative './place.rb'
+require_relative './jurisdiction.rb'
 require_relative './district.rb'
 require_relative './response.rb'
 
@@ -91,8 +92,9 @@ module VoteATX
     # * :time - A date/time string that is parsed and used for the current time.
     #   This is intended for use in testing.
     #
-    def search(lat, lng, juris, options = {})
+    def search(lat, lng, jkey, options = {})
       origin = FindIt::Location.new(lat, lng, :DEG)
+      juris = VoteATX::Jurisdiction.get(@db, jkey) or raise "jurisdiction \"#{jkey}\" not found"
       now = Time.now
 
       search_options = {}
@@ -103,7 +105,7 @@ module VoteATX
           begin
             search_options[k] = now = Time.parse(v)
           rescue ArgumentError
-            # ignore
+            # ignore Time.parse error
           end
         when :max_distance, :max_locations
           search_options[k] = v
@@ -114,7 +116,7 @@ module VoteATX
 
       response = VoteATX::Response.new
 
-      council_district = VoteATX::District::CityCouncil.find(@db, origin)
+      council_district = VoteATX::District::CityCouncil.find(@db, juris, origin)
       response.add_district(council_district) if council_district
 
       precinct = VoteATX::District::Precinct.find(@db, juris, origin)

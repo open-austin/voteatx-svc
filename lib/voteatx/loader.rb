@@ -472,6 +472,29 @@ module VoteATX
       @db[:election_defs] << {:name => "DATE_EARLY_VOTING_ENDS", :value => @date_early_voting_ends}
       @db[:election_defs] << {:name => "DATE_ELECTION_DAY", :value => @date_election_day}
 
+      @log.debug("create_tables: creating table \"jurisdictions\" ...")
+      @db.create_table :jurisdictions do
+        primary_key :id
+        String :symbol, :size => 20, :null => false, :unique => true
+        String :name , :size => 30, :null => false
+
+        Date :date_early_voting_begins
+        Date :date_early_voting_ends
+        Date :date_election_day
+
+        Boolean :have_voting_districts, :null => false
+        String :vtd_table, :size => 30, :null => false
+        Integer :vtd_srid, :null => false
+        String :vtd_col_geo, :size => 16, :null => false
+        String :vtd_col_pct, :size => 16, :null => false
+
+        Boolean :have_early_voting_places, :null => false
+        Boolean :have_election_day_voting_places, :null => false
+
+        String :sample_ballot_url, :size => 128
+
+      end
+
       @log.debug("create_tables: creating table \"voting_locations\" ...")
       @db.create_table :voting_locations do
         primary_key :id

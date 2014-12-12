@@ -105,7 +105,7 @@ module VoteATX
           .join(:voting_schedules, :id => :voting_places__schedule_id) \
           .select_append(:voting_schedules__formatted.as(:schedule_formatted)) \
           \
-          .filter(:voting_places__jurisdiction => juris) \
+          .filter(:voting_places__jurisdiction => juris.key) \
           .filter(:voting_places__place_type => place_type)
 
         if @origin

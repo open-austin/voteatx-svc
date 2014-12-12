@@ -87,8 +87,8 @@ module VoteATX
       search(@params)
     end
 
-    get '/districts/precinct/:id' do
-      district = VoteATX::District::Precinct.get(@@app.db, params["id"])
+    get '/districts/precinct/:juris/:id' do
+      district = VoteATX::District::Precinct.get(@@app.db, params["juris"], params["id"])
       raise Sinatra::NotFound if district.nil?
       jsonp district.to_h
     end

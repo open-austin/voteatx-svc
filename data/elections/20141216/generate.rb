@@ -1,6 +1,7 @@
 #!/usr/bin/env -- ruby
 
 require 'rubygems'
+require 'ostruct'
 require 'bundler'
 Bundler.setup
 require "#{Bundler.root}/lib/voteatx/loader.rb"
@@ -9,11 +10,51 @@ raise "usage: #{$0} database\n" unless ARGV.length == 1
 dbname = ARGV[0]
 raise "database file \"#{dbname}\" already exists\n" if File.exist?(dbname)
 
+DATE_EARLY_VOTING_BEGINS = Date.new(2014, 12, 1)
+DATE_EARLY_VOTING_ENDS = Date.new(2014, 12, 12)
+DATE_ELECTION_DAY = Date.new(2014, 12, 16)
+
+TRAVIS = OpenStruct.new({
+  :key => "TRAVIS",
+  :name => "Travis County",
+  :date_early_voting_begins => DATE_EARLY_VOTING_BEGINS,
+  :date_early_voting_ends => DATE_EARLY_VOTING_ENDS,
+  :date_election_day => DATE_ELECTION_DAY,
+  :have_voting_districts => true,
+  :vtd_table => "voting_districts_travis",
+  :vtd_srid => 3081,
+  :vtd_col_geo => "Geometry",
+  :vtd_col_pct => "p_vtd",
+  :have_early_voting_places => true,
+  :have_election_day_voting_places => true,
+  :sample_ballot_url => "http://www.traviscountyclerk.org/eclerk/content/images/ballots/GR14/%sA.pdf",
+})
+
+WILLIAMSON = OpenStruct.new({
+  :key => "WILLIAMSON",
+  :name => "Williamson County",
+  :date_early_voting_begins => DATE_EARLY_VOTING_BEGINS,
+  :date_early_voting_ends => DATE_EARLY_VOTING_ENDS,
+  :date_election_day => DATE_ELECTION_DAY,
+  :have_voting_districts => true,
+  :vtd_table => "voting_districts_williamson",
+  :vtd_srid => 2277,
+  :vtd_col_geo => "Geometry",
+  :vtd_col_pct => "District_1",
+  :have_early_voting_places => false,
+  :have_election_day_voting_places => false,
+  :sample_ballot_url => nil,
+})
+
 shpl = VoteATX::ShapeFileLoader.new(:database => dbname, :log => @log)
 
-shpl.load(:table => "voting_districts",
+shpl.load(:table => TRAVIS.vtd_table,
   :shapefile => "../../co.travis.voting-districts/2012/VTD2012a.shp",
-  :srid => "3081")
+  :srid => TRAVIS.vtd_srid.to_s)
+
+shpl.load(:table => WILLIAMSON.vtd_table,
+  :shapefile => "../../co.williamson.voting-districts/2012/Wilco2012_VtrPcts.shp",
+  :srid => WILLIAMSON.vtd_srid.to_s)
 
 shpl.load(:table => "council_districts",
   :shapefile => "../../ci.austin.council-districts/2014/single_member_districts.shp",
@@ -230,6 +271,9 @@ loader.explode_combined_precincts = false
 #
 
 loader.create_tables
+
+loader.db[:jurisdictions] << TRAVIS.to_h
+loader.db[:jurisdictions] << WILLIAMSON.to_h
 
 P_TC = "../../co.travis.voting-places/20141216"
 loader.load_evfixed_places("#{P_TC}/20141216_GR14_EVPerm.csv", "TRAVIS", EARLY_VOTING_FIXED_HOURS)
