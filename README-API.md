@@ -225,7 +225,7 @@ this, see the "districts.city_council.region" parameter in the example below.
 Same as: _GET /search_
 
 
-### GET /districts/:type/:id
+### GET /district/:type/:juris/:id
 
 Retrieves a specified district.
 
@@ -233,6 +233,8 @@ Retrieves a specified district.
 
 * :type -- The district type. Supported values are "precinct" and
     "city_council".
+* :juris -- The election jurisdiction, such as "TRAVIS". Matches
+   an id in the jurisdictions table.
 * :id -- The district identifier.
 
 #### Response
@@ -253,7 +255,7 @@ The response is a _District_ entity.
     }
 
 
-### GET /places/:id
+### GET /place/:juris/:id
 
 *Not implemented yet.*
 
@@ -261,6 +263,8 @@ Retrieves a specified place.
 
 ### Request Parameters
 
+* :juris -- The election jurisdiction, such as "TRAVIS". Matches
+   an id in the jurisdictions table.
 * :id -- The place identifier
 
 ### Response
