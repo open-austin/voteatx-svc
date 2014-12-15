@@ -4,7 +4,6 @@ module VoteATX
   class Jurisdiction
 
     attr_reader :id
-    attr_reader :symbol
     attr_reader :name
 
     attr_reader :date_early_voting_begins
@@ -23,8 +22,7 @@ module VoteATX
     attr_reader :sample_ballot_url
 
     def initialize(vals = {})
-      @id = vals[:id]
-      @symbol = vals[:symbol]
+      @id = vals[:id].to_sym
       @name = vals[:name]
       @date_early_voting_begins = vals[:date_early_voting_begins]
       @date_early_voting_ends = vals[:date_early_voting_ends]
@@ -39,8 +37,26 @@ module VoteATX
       @sample_ballot_url = vals[:sample_ballot_url]
     end
 
-    def self.get(db, juris)
-      rec = db[:jurisdictions][:symbol => juris.to_s.upcase]
+    def to_h
+      {
+        :id => @id,
+        :name => @name,
+        :date_early_voting_begins => @date_early_voting_begins,
+        :date_early_voting_ends => @date_early_voting_ends,
+        :date_election_day => @date_election_day,
+        :have_voting_districts => @have_voting_districts,
+        :vtd_table => @vtd_table,
+        :vtd_srid => @vtd_srid,
+        :vtd_col_geo => @vtd_col_geo,
+        :vtd_col_pct => @vtd_col_pct,
+        :have_early_voting_places => @have_early_voting_places,
+        :have_election_day_voting_places => @have_election_day_voting_places,
+        :sample_ballot_url => @sample_ballot_url,
+      }
+    end
+
+    def self.get(db, id)
+      rec = db[:jurisdictions][:id => id.to_s.upcase]
       rec && new(rec)
     end
 

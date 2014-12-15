@@ -1,6 +1,5 @@
 require 'findit-support'
 require 'cgi' # for escape_html
-require_relative './election_params.rb'
 require_relative './place.rb'
 require_relative './jurisdiction.rb'
 require_relative './district.rb'
@@ -74,8 +73,6 @@ module VoteATX
       @db = Sequel.spatialite(database)
       @db.logger = options[:log] if options.has_key?(:log)
       @db.sql_log_level = :debug
-
-      $params = VoteATX::ElectionParams.new(@db)
     end
 
 
@@ -114,23 +111,26 @@ module VoteATX
         end
       end
 
-      response = VoteATX::Response.new
+      response = VoteATX::Response.new(juris)
 
       council_district = VoteATX::District::CityCouncil.find(@db, juris, origin)
       response.add_district(council_district) if council_district
 
       precinct = VoteATX::District::Precinct.find(@db, juris, origin)
       if ! precinct
-        response.error("The location you selected is outside the service area of this application.")
+        response.error("The location you selected is outside the #{juris.name} election jurisdiction.")
         return response.to_h
       end
       response.add_district(precinct)
+      if juris.sample_ballot_url
+        response.add_additional(:sample_ballot_url, (juris.sample_ballot_url % precinct.id))
+      end
 
       f = VoteATX::VotingPlace::Finder.new(@db, juris, search_options)
       f.origin = origin
 
       today = now.to_date
-      if today > $params.date_early_voting_ends
+      if today > juris.date_early_voting_ends
 
         #
         # Election Day algorithm
@@ -140,8 +140,8 @@ module VoteATX
           response.add_place(p)
         end
 
-        if today > $params.date_election_day
-          response.warning("You are viewing historical data, for the election that was held #{$params.date_election_day.strftime("%b %d, %Y")}.")
+        if today > juris.date_election_day
+          response.warning("You are viewing historical data, for the election that was held #{juris.date_election_day.strftime("%b %d, %Y")}.")
         end
 
       else

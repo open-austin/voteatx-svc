@@ -2,11 +2,11 @@ require './spec_helper.rb'
 
 describe VoteATX::Jurisdiction do
 
-  describe "#get" do
+  before(:each) do
+    @db = open_database(:debug => true)
+  end
 
-    before(:each) do
-      @db = open_database(:debug => true)
-    end
+  describe "#get" do
 
     it "retrieves a jurisdiction" do
       juris = VoteATX::Jurisdiction.get(@db, "TRAVIS")
@@ -33,5 +33,18 @@ describe VoteATX::Jurisdiction do
     end
 
   end # describe "#get"
+
+  describe "#to_h" do
+    before(:each) do
+      @juris = VoteATX::Jurisdiction.get(@db, "TRAVIS")
+    end
+    it "returns a hash" do
+      expect(@juris.to_h).to be_instance_of(Hash)
+    end
+    it "contains the id as a member" do
+      expect(@juris.to_h[:id]).to eq(:TRAVIS)
+    end
+  end # describe "#to_h"
+
 end # describe VoteATX::Jurisdiction
 

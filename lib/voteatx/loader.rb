@@ -56,91 +56,6 @@ module VoteATX
 
   end
 
-  # Load a geospatial "shape" file with voting districts into a Spatialite database.
-  #
-  # Uses the "spatialite_tool" command to do the loading.
-  #
-  # Requires a parameters file with YAML definitions for: shapefile, codepage, srid
-  #
-  # THIS IS DEPRECATED!!!!
-  #
-  # This is used by older datasets. Use VoteATX::ShapeFileLoader instead.
-  #
-  class VotingDistrictsLoader
-
-    REQUIRED_PARAMETERS = %w(shapefile codepage srid)
-    SPATIALITE_TOOL = "spatialite_tool"
-
-    # Construct a voting district loader.
-    #
-    # Supported parameters:
-    # * :database - Name of the database to load. Required.
-    # * :table - Name of the database table to create. Required.
-    # * :shp_defs - File that defines parameters for the import. Required.
-    # * :loader - Program to use for loading. Defaults to SPATIALITE_TOOL.
-    # * :log - A Logger instance. Default is to create a new one logging to stderr.
-    #
-    # Example "shp_defs" file:
-    #
-    #     shapefile: VTD2012a.shp
-    #     codepage: CP1252
-    #     srid: 3081
-    #
-    def initialize(params)
-      @database = params.delete(:database) or raise "required parameter \":database\" not specified"
-      @table = params.delete(:table) or raise "required parameter \":table\" not specified"
-      @shp_defs = params.delete(:shp_defs) or raise "required parameter \":shp_defs\" not specified"
-      @loader = params.delete(:loader) || SPATIALITE_TOOL
-      @log = params.delete(:log) || Logger.new($stderr)
-      raise "unknown parameter(s): #{params.keys.join(', ')}" unless params.empty?
-
-      @log.info("loading voting district parameters from \"#{@shp_defs}\" ...")
-      @shp = YAML.load_file(@shp_defs)
-      REQUIRED_PARAMETERS.each do |p|
-        raise "#{@shp_defs}: required parameter \"#{p}\" undefined" unless @shp.has_key?(p)
-      end
-
-      unless @shp["shapefile"] =~ %r{^/}
-        @shp["shapefile"].insert(0, File.dirname(@shp_defs) + "/")
-      end
-    end
-
-
-    # Execute the shapefile import.
-    def load
-      @log.info("starting import of voting districts")
-      @log.info("  source file: #{@shp['shapefile']}")
-      @log.info("  target database: #{@database}")
-      @log.info("  target table: #{@table}")
-
-      cmd = [
-        @loader,
-        "-i",
-        "-shp",
-        @shp['shapefile'].sub(/\.shp$/i, ''),
-        "-d",
-        @database,
-        "-t",
-        @table,
-        "-c",
-        @shp["codepage"],
-        "-s",
-        @shp["srid"],
-      ]
-      @log.info("executing: #{cmd.join(' ')}")
-      raise "command failed" unless system(*cmd)
-    end
-
-
-    # Convenience for: 
-    #
-    #   new(params).load
-    #
-    def self.load(params)
-      new(params).load
-    end
-
-  end
 
   # Load a Spatialite database with voting place information from spreadsheets.
   #
@@ -159,7 +74,7 @@ module VoteATX
       :COMBINED_PCTS => ["Combined Pcts."],
       :LOCATION_ADDRESS => ["Address", "Site Address"],
       :LOCATION_CITY => ["City"],
-      :LOCATION_ZIP => ["Zipcode", "Zip Code"],
+      :LOCATION_ZIP => ["Zip", "Zipcode", "Zip Code"],
       :LOCATION_LONGITUDE => ["Longitude"],
       :LOCATION_LATITUDE => ["Latitude"],
       :SCHEDULE_CODE => ["Hours"],
@@ -215,33 +130,6 @@ module VoteATX
 
     # Regexp to validate zipcode values
     attr_accessor :valid_zip_regexp
-
-    # Key election dates.
-    attr_accessor :date_early_voting_begins, :date_early_voting_ends, :date_election_day
-
-    # TODO
-    #
-    attr_accessor :election_code
-
-    # A one-line description of the election
-    #
-    # Example: "for the Nov 5, 2013 general election in Travis County"
-    #
-    # In the VoteATX app this is displayed below the title of the
-    # voting place (e.g. "Precinct 31415").
-    #
-    attr_accessor :election_description
-
-    # Additional information about the election.
-    #
-    # This is included near the bottom of the info window that is
-    # opened up for a voting place. Full HTML is supported. Line
-    # breaks automatically inserted.
-    #
-    # This would be a good place to put a link to the official
-    # county voting page for this election.
-    #
-    attr_accessor :election_info
 
     # Create individual precinct records from a single combined
     # precinct record.
@@ -459,23 +347,9 @@ module VoteATX
     def create_tables
       @log.info("create_tables: creating database tables ...")
 
-      @log.debug("create_tables: creating table \"election_defs\" ...")
-      @db.create_table :election_defs do
-        String :name, :unique => true, :size => 16, :null => false
-        Text :value
-      end
-
-      @db[:election_defs] << {:name => "ELECTION_CODE", :value => @election_code}
-      @db[:election_defs] << {:name => "ELECTION_DESCRIPTION", :value => @election_description}
-      @db[:election_defs] << {:name => "ELECTION_INFO", :value => @election_info}
-      @db[:election_defs] << {:name => "DATE_EARLY_VOTING_BEGINS", :value => @date_early_voting_begins}
-      @db[:election_defs] << {:name => "DATE_EARLY_VOTING_ENDS", :value => @date_early_voting_ends}
-      @db[:election_defs] << {:name => "DATE_ELECTION_DAY", :value => @date_election_day}
-
       @log.debug("create_tables: creating table \"jurisdictions\" ...")
       @db.create_table :jurisdictions do
-        primary_key :id
-        String :symbol, :size => 20, :null => false, :unique => true
+        String :id, :size => 20, :null => false, :unique => true
         String :name , :size => 30, :null => false
 
         Date :date_early_voting_begins
@@ -492,7 +366,6 @@ module VoteATX
         Boolean :have_election_day_voting_places, :null => false
 
         String :sample_ballot_url, :size => 128
-
       end
 
       @log.debug("create_tables: creating table \"voting_locations\" ...")

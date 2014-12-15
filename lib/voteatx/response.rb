@@ -5,12 +5,14 @@ module VoteATX
   class Response
 
     attr_accessor :message
-    attr_reader :districts, :places
+    attr_reader :jurisdiction, :districts, :places
 
-    def initialize
+    def initialize(jurisdiction)
+      @jurisdiction = jurisdiction
       @districts = {}
       @places = []
       @message = nil
+      @additional = {}
     end
 
     def add_district(district)
@@ -24,6 +26,10 @@ module VoteATX
 
     def add_place(place)
       @places << place.to_h
+    end
+
+    def add_additional(key, value)
+      @additional[key] = value
     end
 
     def error(message, params = {})
@@ -40,10 +46,11 @@ module VoteATX
 
     def to_h
       {
+        :message => @message && @message.to_h,
+        :jurisdiction => @jurisdiction.to_h,
         :districts => @districts,
         :places => @places,
-        :message => @message && @message.to_h,
-        :params => $params.to_h,
+        :additional => @additional,
       }
     end
 

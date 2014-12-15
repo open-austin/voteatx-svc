@@ -15,7 +15,7 @@ DATE_EARLY_VOTING_ENDS = Date.new(2014, 12, 12)
 DATE_ELECTION_DAY = Date.new(2014, 12, 16)
 
 TRAVIS = OpenStruct.new({
-  :key => "TRAVIS",
+  :id => "TRAVIS",
   :name => "Travis County",
   :date_early_voting_begins => DATE_EARLY_VOTING_BEGINS,
   :date_early_voting_ends => DATE_EARLY_VOTING_ENDS,
@@ -31,7 +31,7 @@ TRAVIS = OpenStruct.new({
 })
 
 WILLIAMSON = OpenStruct.new({
-  :key => "WILLIAMSON",
+  :id => "WILLIAMSON",
   :name => "Williamson County",
   :date_early_voting_begins => DATE_EARLY_VOTING_BEGINS,
   :date_early_voting_ends => DATE_EARLY_VOTING_ENDS,
@@ -63,59 +63,50 @@ shpl.load(:table => "council_districts",
 loader = VoteATX::VotingPlacesLoader.new(dbname, :log => @log, :debug => false)
 
 
+#######
 ####
-#
-# The "election_code" is used to determine sample ballots.
-#
+#### The "election_code" is used to determine sample ballots.
+####
+###
+###loader.election_code = "GR14"
+###
+###
+########
+####
+#### Key dates.
+####
+###
+###loader.date_early_voting_begins = Date.new(2014, 12, 1)
+###loader.date_early_voting_ends = Date.new(2014, 12, 12)
+###loader.date_election_day = Date.new(2014, 12, 16)
+###
+########
+####
+#### A one-line description of the election
+####
+#### Example: "for the Nov 5, 2013 general election in Travis County"
+####
+#### In the VoteATX app this is displayed below the title of the
+#### voting place (e.g. "Precinct 31415").
+####
+###
+####loader.election_description = 
+###
+###
+########
+####
+#### Additional information about the election.
+####
+#### This is included near the bottom of the info window that is
+#### opened up for a voting place. Full HTML is supported. Line
+#### breaks automatically inserted.
+####
+#### This would be a good place to put a link to the official
+#### county voting page for this election.
+####
+###
+####loader.election_info = 
 
-loader.election_code = "GR14"
-
-
-#####
-#
-# Key dates.
-#
-
-loader.date_early_voting_begins = Date.new(2014, 12, 1)
-loader.date_early_voting_ends = Date.new(2014, 12, 12)
-loader.date_election_day = Date.new(2014, 12, 16)
-
-#####
-#
-# A one-line description of the election
-#
-# Example: "for the Nov 5, 2013 general election in Travis County"
-#
-# In the VoteATX app this is displayed below the title of the
-# voting place (e.g. "Precinct 31415").
-#
-
-#loader.election_description = 
-
-
-#####
-#
-# Additional information about the election.
-#
-# This is included near the bottom of the info window that is
-# opened up for a voting place. Full HTML is supported. Line
-# breaks automatically inserted.
-#
-# This would be a good place to put a link to the official
-# county voting page for this election.
-#
-
-#loader.election_info = 
-
-
-#####
-#
-# Hours voting places are open on election day.
-#
-# Define this as a range:  Time .. Time
-#
-
-ELECTION_DAY_HOURS = Time.new(2014, 12, 16, 7, 0) .. Time.new(2014, 12, 16, 19, 0)
 
 
 #####
@@ -248,16 +239,6 @@ EARLY_VOTING_FIXED_HOURS = {
 
 #####
 #
-# Some definitions used for input validation.
-#
-
-loader.valid_lng_range = -98.057163 .. -97.383048
-loader.valid_lat_range = 30.088999 .. 30.572025
-loader.valid_zip_regexp = /^78[67]\d\d$/
-
-
-#####
-#
 # Set "explode_combined_precincts" true if the "Combined Pcts" needs to be
 # exploded into multiple rows. Set it false if there will be a row
 # per precinct.
@@ -275,9 +256,24 @@ loader.create_tables
 loader.db[:jurisdictions] << TRAVIS.to_h
 loader.db[:jurisdictions] << WILLIAMSON.to_h
 
+ELECTION_DAY_HOURS = Time.new(2014, 12, 16, 7, 0) .. Time.new(2014, 12, 16, 19, 0)
+
+loader.valid_lng_range = -97.85458 .. -97.65450
+loader.valid_lat_range = 30.43829 .. 30.579288
+loader.valid_zip_regexp = /^78[67]\d\d$/
+
+P_wC = "../../co.williamson.voting-places/20141216"
+loader.load_eday_places("#{P_wC}/VoteCenters_Dec2014.csv", "WILLIAMSON", ELECTION_DAY_HOURS)
+
+
+loader.valid_lng_range = -98.057163 .. -97.383048
+loader.valid_lat_range = 30.088999 .. 30.572025
+loader.valid_zip_regexp = /^78[67]\d\d$/
+
 P_TC = "../../co.travis.voting-places/20141216"
 loader.load_evfixed_places("#{P_TC}/20141216_GR14_EVPerm.csv", "TRAVIS", EARLY_VOTING_FIXED_HOURS)
 loader.load_evmobile_places("#{P_TC}/20141216_GR14_EVMobile.csv", "TRAVIS")
 loader.load_eday_places("#{P_TC}/20141216_GR14_EDay.csv", "TRAVIS", ELECTION_DAY_HOURS)
+
 loader.log.info("done")
 
